@@ -1,0 +1,179 @@
+/* src/styles/index.css */
+/* Design system for Geometric Defense — dark, premium, vibrant */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;900&display=swap');
+
+/* ─── Tokens ──────────────────────────────────────────────────────────────── */
+:root {
+  --bg-deep:     #070B14;
+  --bg-panel:    #0D1321;
+  --bg-card:     #111929;
+  --bg-hover:    #1A2440;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-glow: rgba(100, 160, 255, 0.2);
+
+  --col-triangle: #E8643A;
+  --col-square:   #4A90D9;
+  --col-circle:   #2ECC97;
+  --col-pentagon: #9B7FDD;
+  --col-hexagon:  #D4901A;
+
+  --col-energy:  #F0B429;
+  --col-hp:      #E74C3C;
+  --col-wave:    #E8643A;
+  --col-score:   #9B7FDD;
+
+  --text-primary:   #F0F4FF;
+  --text-secondary: #8899BB;
+  --text-muted:     #4A5878;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-glow: 0 0 20px rgba(100, 160, 255, 0.15);
+  --shadow-panel: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+/* ─── Reset ───────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+#root { width: 100%; height: 100%; display: flex; flex-direction: column; }
+
+/* ─── Typography ──────────────────────────────────────────────────────────── */
+.font-orbitron { font-family: 'Orbitron', monospace; }
+
+/* ─── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-panel); }
+::-webkit-scrollbar-thumb { background: var(--border-glow); border-radius: 2px; }
+
+/* ─── Glassmorphism Cards ─────────────────────────────────────────────────── */
+.glass {
+  background: rgba(13, 19, 33, 0.85);
+  backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+/* ─── Buttons ─────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+.btn:active { transform: scale(0.96); }
+
+.btn-primary {
+  background: linear-gradient(135deg, #E8643A 0%, #D4451A 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(232, 100, 58, 0.35);
+}
+.btn-primary:hover { box-shadow: 0 6px 20px rgba(232, 100, 58, 0.5); transform: translateY(-1px); }
+
+.btn-secondary {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+
+.btn-success {
+  background: linear-gradient(135deg, #2ECC97 0%, #20A87A 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(46, 204, 151, 0.3);
+}
+.btn-success:hover { box-shadow: 0 6px 18px rgba(46, 204, 151, 0.45); transform: translateY(-1px); }
+
+.btn-danger {
+  background: rgba(231, 76, 60, 0.15);
+  color: #E74C3C;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+.btn-danger:hover { background: rgba(231, 76, 60, 0.25); }
+
+.btn-gold {
+  background: linear-gradient(135deg, #F0B429 0%, #D4901A 100%);
+  color: #000;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(240, 180, 41, 0.3);
+}
+.btn-gold:hover { box-shadow: 0 6px 20px rgba(240, 180, 41, 0.5); transform: translateY(-1px); }
+
+.btn-disabled, .btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ─── Badges / Chips ──────────────────────────────────────────────────────── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ─── Animations ──────────────────────────────────────────────────────────── */
+@keyframes fadeIn  { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeUp  { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse   { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes spin    { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes float   { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes waveIn  { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px currentColor; }
+  50% { box-shadow: 0 0 24px currentColor; }
+}
+
+.animate-fadeIn  { animation: fadeIn 0.3s ease forwards; }
+.animate-fadeUp  { animation: fadeUp 0.4s ease forwards; }
+.animate-pulse   { animation: pulse 1.5s ease infinite; }
+.animate-spin    { animation: spin 1s linear infinite; }
+.animate-float   { animation: float 3s ease-in-out infinite; }
+.animate-waveIn  { animation: waveIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+/* ─── Input ───────────────────────────────────────────────────────────────── */
+.input {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px 12px;
+  width: 100%;
+  transition: border-color 0.15s;
+  outline: none;
+}
+.input:focus { border-color: var(--border-glow); }
+.input::placeholder { color: var(--text-muted); }
+
+/* ─── Progress bar ────────────────────────────────────────────────────────── */
+.progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 3px; transition: width 0.3s ease; }

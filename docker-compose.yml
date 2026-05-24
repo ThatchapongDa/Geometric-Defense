@@ -1,0 +1,9 @@
+services:
+  geometric-defense:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: geometric-defense
+    ports:
+      - "3000:80"
+    restart: unless-stopped

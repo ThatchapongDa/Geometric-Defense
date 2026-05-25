@@ -1,18 +1,38 @@
 # Geometric Defense (Shape Defense)
 
-เกม Tower Defense เชิงกลยุทธ์ที่ใช้กราฟิกแบบเรขาคณิต (Geometric) สไตล์ไซไฟ-แก้วใส (Glassmorphism)
+เกม Tower Defense เชิงกลยุทธ์ที่ใช้กราฟิกแบบเรขาคณิต (Geometric) สไตล์ไซไฟ-แก้วใส (Glassmorph)
 
 ---
 
 ## 🎮 ภาพรวม
 
-เป็นการนำแนวเกมที่ชอบมาบวกกับเกมโปรดอย่าง Arknights มาลองสร้างเกมใหม่ โดยเริ่มจากการนำรูปทรงต่างๆ มาเป็นตัวละคร
+เป็นการนำแนวเกมที่ชอบมาบวกกับเกมโปรดอย่าง Arknights มาลองสร้างเกมใหม่ โดยใช้เรขาคณิตอย่างสำคัญในเกม
+
+---
+
+## 📸 ภาพในเกม (Screenshots)
+
+### 🎯 หน้าเลือกด่าน (Mission Select)
+![Mission Select - Dark Theme](https://raw.githubusercontent.com/ThatchapongDa/Geometric-Defense/main/screenshots/01-mission-select-dark.png)
+*เลือกด่านต่างๆ พร้อมข้อมูลศัตรูและรางวัล*
+
+### 🎯 หน้าเลือกด่าน (Light Theme)
+![Mission Select - Light Theme](https://raw.githubusercontent.com/ThatchapongDa/Geometric-Defense/main/screenshots/04-mission-select-light.png)
+*ธีมสว่างพร้อมตัวเลือก Dark/Light/B&W*
+
+### ⚔️ ระหว่างเล่นเกม - Wave 1
+![Gameplay Wave 1](https://raw.githubusercontent.com/ThatchapongDa/Geometric-Defense/main/screenshots/02-gameplay-wave1.png)
+*วาง Unit ต่างๆ ป้องกันศัตรู - 6 ประเภท Unit (Triangle, Square, Circle, Pentagon, Hexagon, Diamond)*
+
+### ⚔️ ระหว่างเล่นเกม - Wave 2
+![Gameplay Wave 2](https://raw.githubusercontent.com/ThatchapongDa/Geometric-Defense/main/screenshots/03-gameplay-wave2.png)
+*ศัตรูหลากหลายชนิดพร้อมสถิติ HP และ Damage*
 
 ---
 
 ## 🤖 Prompts (คำสั่งที่ใช้สร้างเกมนี้)
 
-You are an expert game developer using the Anthropic API to create an advanced Tower Defense game called "Geometric Defense". This is a React-based game where geometric shapes defend against enemy waves.
+You are an expert game developer using the Anthropic API to create an advanced Tower Defense game called "Geometric Defense". This is a React-based game where geometric shapes defend against enemy attacks.
 
 ### CORE GAME MECHANICS:
 
@@ -125,4 +145,4 @@ Provide complete, production-ready code with comments explaining AI integration 
 
 ## 🎯 ไอเดีย
 
-เริ่มพัฒนาจากการนำแนวเกมที่ชอบมาบวกกับเกมโปรดอย่าง Arknights มาลองสร้างเป็นเกมของตัวเอง โดยเริ่มจากการนำรูปทรงต่างๆ มาเป็นตัวละคร
+เริ่มพัฒนาจากการนำแนวเกมที่ชอบมาบวกกับเกมโปรดอย่าง Arknights มาลองสร้างเกมใหม่ โดยใช้เรขาคณิตอย่างสำคัญในเกม

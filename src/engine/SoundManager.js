@@ -216,12 +216,21 @@ class SoundManager {
   setVolume(level) {
     this.volume = Math.max(0, Math.min(1, level));
     if (this.masterGain) this.masterGain.gain.value = this.volume;
+    if (this.bgmAudio) this.bgmAudio.volume = this.volume * 0.4;
   }
 
   setEnabled(bool) {
     this.enabled = bool;
     if (this.masterGain) {
       this.masterGain.gain.value = bool ? this.volume : 0;
+    }
+    if (this.bgmAudio) {
+      if (bool) {
+        this.bgmAudio.volume = this.volume * 0.4;
+        this.bgmAudio.play().catch(() => {});
+      } else {
+        this.bgmAudio.pause();
+      }
     }
   }
 

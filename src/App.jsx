@@ -83,9 +83,9 @@ export default function App() {
     if (state.selectedUnitId) actions.sellUnit(state.selectedUnitId);
   }, [actions, state.selectedUnitId]);
 
-  const handleStartGame = useCallback((mapId) => {
+  const handleStartGame = useCallback((mapId, contracts) => {
     particles.clear();
-    actions.startGame(mapId);
+    actions.startGame(mapId, contracts);
   }, [actions]);
 
   const handleLoadGame = useCallback(() => {
@@ -149,7 +149,7 @@ export default function App() {
         onSave={actions.saveGame}
         onOpenEnemyInfo={() => { actions.setPaused(true); setShowEnemyInfo(true); }}
         onOpenBuffInfo={() => { actions.setPaused(true); setShowBuffInfo(true); }}
-        onQuitToMenu={actions.quitToMenu}
+        onQuitToMenu={() => { if (window.confirm('ต้องการออกจากเกมกลับไปหน้าเมนูหลัก?')) actions.quitToMenu(); }}
       />
 
       {/* Game area */}
@@ -197,8 +197,8 @@ export default function App() {
           <BuffStatusBar activeBuffs={state.activeBuffs} />
           {showSettings && <SettingsPanel state={state} actions={actions} onClose={() => setShowSettings(false)} />}
           {showAchievements && <AchievementsModal state={state} onClose={() => setShowAchievements(false)} />}
-          {showEnemyInfo && <EnemyEncyclopediaModal onClose={() => setShowEnemyInfo(false)} />}
-          {showBuffInfo && <BuffListModal state={state} onClose={() => setShowBuffInfo(false)} />}
+          {showEnemyInfo && <EnemyEncyclopediaModal onClose={() => { setShowEnemyInfo(false); actions.setPaused(false); }} />}
+          {showBuffInfo && <BuffListModal state={state} onClose={() => { setShowBuffInfo(false); actions.setPaused(false); }} />}
 
           {/* Notifications */}
           <AchievementNotification

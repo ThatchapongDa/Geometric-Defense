@@ -1,5 +1,4 @@
 import React from 'react';
-import { CONTRACTS } from './MenuScreen'; // Need to export CONTRACTS from MenuScreen or define them here. Wait, let's redefine or import.
 
 export default function BuffListModal({ state, onClose }) {
   const { activeBuffs, selectedContracts, difficultyMod } = state;

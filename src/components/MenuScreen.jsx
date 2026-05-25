@@ -555,3 +555,66 @@ function BackgroundShapes() {
     </div>
   );
 }
+
+// ─── Game Over Screen ──────────────────────────────────────────────────────────
+export function GameOverScreen({ wave, score, hp, onRestart }) {
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      width: '100%', height: '100%',
+      background: 'linear-gradient(180deg, #0B0D14 0%, #1A0A0A 100%)',
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
+      <BackgroundShapes />
+
+      <div style={{
+        position: 'relative', zIndex: 1,
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        gap: '24px', padding: '48px',
+        background: 'rgba(7,11,20,0.85)',
+        border: '1px solid rgba(231,76,60,0.3)',
+        borderRadius: '24px',
+        backdropFilter: 'blur(16px)',
+        boxShadow: '0 16px 64px rgba(231,76,60,0.15)',
+        maxWidth: '480px', width: '90%',
+      }}>
+        <div style={{
+          fontSize: '48px',
+          fontFamily: 'Orbitron, monospace',
+          fontWeight: 900,
+          background: 'linear-gradient(135deg, #E74C3C, #C0392B)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          letterSpacing: '3px',
+        }}>
+          GAME OVER
+        </div>
+
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around', gap: '16px' }}>
+          <StatCell label="WAVE" value={wave + 1} color="#E8643A" />
+          <StatCell label="SCORE" value={score.toLocaleString()} color="#F0B429" />
+          <StatCell label="HP" value={hp} color="#E74C3C" />
+        </div>
+
+        <button
+          className="btn btn-primary"
+          onClick={onRestart}
+          style={{
+            fontSize: 16,
+            padding: '14px 48px',
+            letterSpacing: '1.5px',
+            fontFamily: 'Orbitron, monospace',
+            background: 'linear-gradient(135deg, #E74C3C, #C0392B)',
+            boxShadow: '0 4px 20px rgba(231,76,60,0.4)',
+            border: 'none',
+            marginTop: '8px',
+          }}
+        >
+          🔄 TRY AGAIN
+        </button>
+      </div>
+    </div>
+  );
+}
+

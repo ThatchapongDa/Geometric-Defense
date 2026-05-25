@@ -67,6 +67,7 @@ export const INITIAL_STATE = {
   difficultyMod: 1.0,
   performanceScore: 0,
   waveEnemiesRemaining: 0,
+  waveEnemiesKilled: 0,
   tutorialStep: 0,
   tutorialDone: false,
   soundEnabled: true,
@@ -175,7 +176,14 @@ function reducer(state, action) {
 
     case 'QUIT_TO_MENU':
       soundManager.stopBGM();
-      return { ...INITIAL_STATE, phase: 'menu' };
+      return {
+        ...INITIAL_STATE,
+        phase: 'menu',
+        soundEnabled: state.soundEnabled,
+        volume: state.volume,
+        tutorialDone: state.tutorialDone,
+        achievements: state.achievements,
+      };
 
     case 'SET_SPEED':
       return { ...state, speed: action.payload };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ENEMY_DATA } from '../constants/units';
+import { ENEMY_DATA } from '../constants/enemies';
 
 export default function EnemyEncyclopediaModal({ onClose }) {
   return (

@@ -20,7 +20,12 @@ import Stage4ClearedScreen from './components/Stage4ClearedScreen';
 import BuffStatusBar from './components/BuffStatusBar';
 import EnemyEncyclopediaModal from './components/EnemyEncyclopediaModal';
 import BuffListModal from './components/BuffListModal';
+import UnitGalleryModal from './components/UnitGalleryModal';
+import { preloadAllSprites } from './constants/sprites';
 import './styles/index.css';
+
+// Preload sprite images as early as possible
+preloadAllSprites();
 
 export default function App() {
   const { state, dispatch, actions } = useGameState();
@@ -32,10 +37,28 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showEnemyInfo, setShowEnemyInfo] = useState(false);
   const [showBuffInfo, setShowBuffInfo] = useState(false);
+  const [showUnitGallery, setShowUnitGallery] = useState(false);
   const [waveAlertVisible, setWaveAlertVisible] = useState(false);
 
   // Keep stateRef in sync
   useEffect(() => { stateRef.current = state; }, [state]);
+
+  // Apply theme classes reactively to document.body
+  useEffect(() => {
+    if (state.lightTheme) {
+      document.body.classList.add('theme-light');
+    } else {
+      document.body.classList.remove('theme-light');
+    }
+  }, [state.lightTheme]);
+
+  useEffect(() => {
+    if (state.grayscaleTheme) {
+      document.body.classList.add('theme-grayscale');
+    } else {
+      document.body.classList.remove('theme-grayscale');
+    }
+  }, [state.grayscaleTheme]);
 
   // Init engine once
   useEffect(() => {
@@ -105,12 +128,18 @@ export default function App() {
   // Show menu / game over / stage 4 cleared overlays
   if (state.phase === 'menu') {
     return (
-      <MenuScreen
-        onStart={handleStartGame}
-        onLoad={handleLoadGame}
-        hasSave={hasSave}
-        achievements={state.achievements}
-      />
+      <>
+        <MenuScreen
+          state={state}
+          actions={actions}
+          onStart={handleStartGame}
+          onLoad={handleLoadGame}
+          hasSave={hasSave}
+          achievements={state.achievements}
+          onOpenUnitGallery={() => setShowUnitGallery(true)}
+        />
+        {showUnitGallery && <UnitGalleryModal onClose={() => setShowUnitGallery(false)} />}
+      </>
     );
   }
 
@@ -149,6 +178,7 @@ export default function App() {
         onSave={actions.saveGame}
         onOpenEnemyInfo={() => { actions.setPaused(true); setShowEnemyInfo(true); }}
         onOpenBuffInfo={() => { actions.setPaused(true); setShowBuffInfo(true); }}
+        onOpenUnitGallery={() => { actions.setPaused(true); setShowUnitGallery(true); }}
         onQuitToMenu={() => { if (window.confirm('ต้องการออกจากเกมกลับไปหน้าเมนูหลัก?')) actions.quitToMenu(); }}
       />
 
@@ -190,15 +220,18 @@ export default function App() {
             <CardDraftOverlay
               draftCards={state.draftCards}
               onSelect={actions.chooseDraftCard}
+              onOpenBuffInfo={() => setShowBuffInfo(true)}
+              state={state}
             />
           )}
 
           {/* Buff Status Bar */}
-          <BuffStatusBar activeBuffs={state.activeBuffs} />
+          <BuffStatusBar activeBuffs={state.activeBuffs} onClick={() => { actions.setPaused(true); setShowBuffInfo(true); }} />
           {showSettings && <SettingsPanel state={state} actions={actions} onClose={() => setShowSettings(false)} />}
           {showAchievements && <AchievementsModal state={state} onClose={() => setShowAchievements(false)} />}
           {showEnemyInfo && <EnemyEncyclopediaModal onClose={() => { setShowEnemyInfo(false); actions.setPaused(false); }} />}
           {showBuffInfo && <BuffListModal state={state} onClose={() => { setShowBuffInfo(false); actions.setPaused(false); }} />}
+          {showUnitGallery && <UnitGalleryModal onClose={() => { setShowUnitGallery(false); actions.setPaused(false); }} />}
 
           {/* Notifications */}
           <AchievementNotification

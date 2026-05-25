@@ -3,7 +3,7 @@
 
 import React, { useState, useRef } from 'react';
 import { UNIT_DATA, getUnitStats } from '../constants/units';
-import { UNIT_SPRITES, getSpriteImage } from '../constants/sprites';
+import { UNIT_SPRITES } from '../constants/sprites';
 import UnitInfoModal from './UnitInfoModal';
 
 const UNIT_ICONS = {
@@ -35,8 +35,8 @@ export default function UnitPanel({ state, actions }) {
       flexDirection: 'column',
       gap: '8px',
       padding: '12px 8px',
-      background: 'rgba(7,11,20,0.95)',
-      borderRight: '1px solid rgba(255,255,255,0.06)',
+      background: 'var(--bg-panel)',
+      borderRight: '1px solid var(--border)',
       overflowY: 'auto',
       flexShrink: 0,
     }}>
@@ -46,7 +46,7 @@ export default function UnitPanel({ state, actions }) {
         color: 'var(--text-muted)',
         fontWeight: 700,
         padding: '0 4px 4px',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        borderBottom: '1px solid var(--border)',
       }}>
         DEPLOY UNIT
       </div>
@@ -84,7 +84,7 @@ export default function UnitPanel({ state, actions }) {
       <div style={{
         marginTop: 'auto',
         padding: '8px 4px 0',
-        borderTop: '1px solid rgba(255,255,255,0.05)',
+        borderTop: '1px solid var(--border)',
         fontSize: '10px',
         color: 'var(--text-muted)',
         lineHeight: 1.5,
@@ -100,6 +100,7 @@ export default function UnitPanel({ state, actions }) {
 function UnitCard({ type, data, stats, icon, isSelected, canAfford, onClick, onLongPress }) {
   const timerRef = useRef(null);
   const wasLongPress = useRef(false);
+  const [imgError, setImgError] = React.useState(false);
 
   const startPress = (e) => {
     if (e.button === 2) return; // Right click
@@ -141,11 +142,11 @@ function UnitCard({ type, data, stats, icon, isSelected, canAfford, onClick, onL
         background: isSelected
           ? `linear-gradient(135deg, ${data.color}22, ${data.color}11)`
           : canAfford
-          ? 'rgba(255,255,255,0.03)'
-          : 'rgba(0,0,0,0.2)',
+          ? 'var(--bg-card)'
+          : 'rgba(0,0,0,0.08)',
         border: isSelected
           ? `1px solid ${data.color}`
-          : `1px solid rgba(255,255,255,0.06)`,
+          : `1px solid var(--border)`,
         borderRadius: 10,
         cursor: canAfford ? 'pointer' : 'not-allowed',
         transition: 'all 0.15s ease',
@@ -159,10 +160,11 @@ function UnitCard({ type, data, stats, icon, isSelected, canAfford, onClick, onL
     >
       {/* Header row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        {UNIT_SPRITES[type] && getSpriteImage(UNIT_SPRITES[type].icon) ? (
+        {UNIT_SPRITES[type] && !imgError ? (
           <img 
             src={UNIT_SPRITES[type].icon} 
             alt={data.name}
+            onError={() => setImgError(true)}
             style={{ width: 28, height: 28, objectFit: 'contain', filter: isSelected ? `drop-shadow(0 0 6px ${data.color})` : 'none' }}
           />
         ) : (
@@ -231,7 +233,7 @@ function MiniStat({ label, value, color }) {
     <span style={{
       fontSize: '10px',
       color: color || 'var(--text-secondary)',
-      background: 'rgba(255,255,255,0.04)',
+      background: 'var(--bg-hover)',
       padding: '1px 5px',
       borderRadius: 4,
       fontWeight: 600,

@@ -1,8 +1,6 @@
-// src/components/UpgradeModal.jsx
-// Click a placed unit to see stats and upgrade/sell options
-
 import React from 'react';
 import { UNIT_DATA, getUnitStats } from '../constants/units';
+import { UNIT_SPRITES } from '../constants/sprites';
 
 const TIER_NAMES = ['Tier I', 'Tier II', 'Tier III'];
 const UNIT_ICONS = { triangle: '▲', square: '■', circle: '●', pentagon: '⬠', hexagon: '⬡', diamond: '◆' };
@@ -37,9 +35,25 @@ export default function UpgradeModal({ unit, energy, onUpgrade, onSell, onClose 
     >
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 16 }}>
-          <span style={{ fontSize: 36, color: data.color, textShadow: `0 0 20px ${data.color}` }}>
-            {UNIT_ICONS[unit.type]}
-          </span>
+          {UNIT_SPRITES[unit.type] ? (
+            <img 
+              src={UNIT_SPRITES[unit.type].chibi || UNIT_SPRITES[unit.type].icon} 
+              alt={data.name}
+              style={{
+                width: 44,
+                height: 44,
+                objectFit: 'contain',
+                borderRadius: '8px',
+                border: `1.5px solid ${data.color}`,
+                background: `linear-gradient(135deg, ${data.color}33, ${data.color}11)`,
+                boxShadow: `0 0 12px ${data.color}33`,
+              }}
+            />
+          ) : (
+            <span style={{ fontSize: 36, color: data.color, textShadow: `0 0 20px ${data.color}` }}>
+              {UNIT_ICONS[unit.type]}
+            </span>
+          )}
           <div>
             <div style={{ fontSize: 16, fontWeight: 800, color: data.color, fontFamily: 'Orbitron, monospace' }}>
               {data.name}

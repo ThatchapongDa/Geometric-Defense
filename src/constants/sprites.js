@@ -56,7 +56,7 @@ export const UNIT_SPRITES = {
     faceLeft:    '/assets/units/circle/face_left.png',
     faceFront:   '/assets/units/circle/face_front.png',
     faceBack:    '/assets/units/circle/face_back.png',
-    skillIcon:   '/assets/units/circle/skill_icon.png',
+    skillIcon:   '/assets/units/circle/icon.png',
   },
   diamond: {
     icon:        '/assets/units/diamond/icon.png',
@@ -92,6 +92,7 @@ export const ENEMY_SPRITES = {
 // ─── Sprite Loader (preloads images and caches them) ───────────────────────────
 const imageCache = {};
 const failedPaths = new Set();
+const loadingPaths = new Set();
 
 /**
  * Load an image and cache it. Returns the cached Image object or null if loading fails.
@@ -101,13 +102,25 @@ const failedPaths = new Set();
 export function getSpriteImage(path) {
   if (!path) return null;
   if (failedPaths.has(path)) return null;
+
+  // Already loaded and ready
   if (imageCache[path]) return imageCache[path];
 
-  // Start loading
+  // Already loading — don't create a new Image
+  if (loadingPaths.has(path)) return null;
+
+  // Start loading for the first time
+  loadingPaths.add(path);
   const img = new Image();
   img.src = path;
-  img.onload = () => { imageCache[path] = img; };
-  img.onerror = () => { failedPaths.add(path); };
+  img.onload = () => {
+    imageCache[path] = img;
+    loadingPaths.delete(path);
+  };
+  img.onerror = () => {
+    failedPaths.add(path);
+    loadingPaths.delete(path);
+  };
 
   // Not ready yet — return null so the fallback (geometric shape) is drawn
   return null;

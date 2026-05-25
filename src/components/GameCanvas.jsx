@@ -79,7 +79,7 @@ export default function GameCanvas({ state, actions, engineRef }) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#07080F',
+      background: 'var(--bg-deep)',
       overflow: 'hidden',
       position: 'relative',
     }}>

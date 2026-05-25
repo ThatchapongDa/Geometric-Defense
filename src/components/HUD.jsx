@@ -6,7 +6,7 @@ import { MAPS, generateWave } from '../constants/waves';
 
 const SPEED_OPTIONS = [1, 1.5, 2];
 
-export default function HUD({ state, actions, onOpenSettings, onOpenAchievements, onSave, onOpenEnemyInfo, onOpenBuffInfo, onQuitToMenu }) {
+export default function HUD({ state, actions, onOpenSettings, onOpenAchievements, onSave, onOpenEnemyInfo, onOpenBuffInfo, onOpenUnitGallery, onQuitToMenu }) {
   const { hp, maxHp, energy, wave, score, speed, waveActive, betweenWaves, phase, achievements, paused } = state;
   const hpPct = (hp / maxHp) * 100;
   const unlockedCount = Object.keys(achievements || {}).length;
@@ -18,7 +18,7 @@ export default function HUD({ state, actions, onOpenSettings, onOpenAchievements
 
   // Deployed units count
   const deployedCount = Object.keys(state.units || {}).length;
-  const maxUnits = MAPS[state.mapId]?.maxUnits || 8;
+  const maxUnits = (MAPS[state.mapId]?.maxUnits || 8) + (state.activeBuffs?.deploymentLimit || 0);
 
   return (
     <div style={{
@@ -26,8 +26,8 @@ export default function HUD({ state, actions, onOpenSettings, onOpenAchievements
       alignItems: 'center',
       gap: '12px',
       padding: '8px 16px',
-      background: 'rgba(7,11,20,0.95)',
-      borderBottom: '1px solid rgba(255,255,255,0.06)',
+      background: 'var(--bg-panel)',
+      borderBottom: '1px solid var(--border)',
       backdropFilter: 'blur(12px)',
       zIndex: 100,
       flexShrink: 0,
@@ -46,7 +46,7 @@ export default function HUD({ state, actions, onOpenSettings, onOpenAchievements
         GEO DEF
       </span>
 
-      <div style={{ width: 1, height: 28, background: 'rgba(255,255,255,0.08)' }} />
+      <div style={{ width: 1, height: 28, background: 'var(--border)' }} />
 
       {/* HP */}
       <StatBlock
@@ -89,6 +89,8 @@ export default function HUD({ state, actions, onOpenSettings, onOpenAchievements
         label="UNITS"
         value={`${deployedCount}/${maxUnits}`}
         color={deployedCount >= maxUnits ? '#E74C3C' : '#00D4FF'}
+        glow={state.activeBuffs?.deploymentLimit > 0}
+        extraLabel={state.activeBuffs?.deploymentLimit > 0 ? `(+${state.activeBuffs.deploymentLimit})` : ''}
       />
 
       {/* Score */}
@@ -118,16 +120,27 @@ export default function HUD({ state, actions, onOpenSettings, onOpenAchievements
         <div style={{ display: 'flex', gap: '8px' }}>
           <button
             className="btn btn-secondary"
+            onClick={onOpenUnitGallery}
+            title="คลังภาพตัวละคร & Splash Art"
+            style={{ padding: '6px 10px', fontSize: '13px' }}
+          >🎴</button>
+          <button
+            className="btn btn-secondary"
             onClick={onOpenEnemyInfo}
-            title="Enemy Database"
+            title="สารานุกรมข้อมูลศัตรู"
             style={{ padding: '6px 10px', fontSize: '13px' }}
           >📖</button>
           <button
             className="btn btn-secondary"
             onClick={onOpenBuffInfo}
-            title="Active Buffs & Difficulty"
-            style={{ padding: '6px 10px', fontSize: '13px' }}
-          >⚡</button>
+            title="ดูบัฟและดีบัพที่เลือกไปแล้ว"
+            style={{ padding: '6px 12px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '4px' }}
+          >
+            ⚡ <span style={{ fontSize: '11px', fontWeight: 700 }}>บัฟ & ดีบัพ ({
+              Object.values(state?.activeBuffs || {}).filter(v => v > 0).length + 
+              Object.keys(state?.selectedContracts || {}).filter(k => state?.selectedContracts[k]).length
+            })</span>
+          </button>
         </div>
       )}
 
@@ -156,7 +169,7 @@ export default function HUD({ state, actions, onOpenSettings, onOpenAchievements
         <button
           className="btn btn-secondary"
           onClick={onQuitToMenu}
-          title="Quit to Main Menu"
+          title="ออกจากเกมกลับเมนูหลัก"
           style={{ padding: '6px 10px', fontSize: '13px', color: '#E74C3C' }}
         >🏠</button>
       )}
@@ -217,13 +230,24 @@ export default function HUD({ state, actions, onOpenSettings, onOpenAchievements
   );
 }
 
-function StatBlock({ icon, label, value, barPct, barColor, color, minWidth }) {
+function StatBlock({ icon, label, value, barPct, barColor, color, minWidth, glow, extraLabel }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: minWidth || 64 }}>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '2px',
+      minWidth: minWidth || 64,
+      padding: glow ? '2px 8px' : '0px',
+      background: glow ? 'rgba(240, 180, 41, 0.08)' : 'transparent',
+      borderRadius: glow ? '6px' : '0px',
+      border: glow ? '1px solid rgba(240, 180, 41, 0.3)' : 'none',
+      boxShadow: glow ? '0 0 10px rgba(240, 180, 41, 0.15)' : 'none',
+      transition: 'all 0.3s ease',
+    }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
         <span style={{ fontSize: '12px' }}>{icon}</span>
         <span style={{ fontSize: '9px', letterSpacing: '0.8px', color: 'var(--text-muted)', fontWeight: 600 }}>
-          {label}
+          {label} {extraLabel && <span style={{ color: '#F0B429', fontWeight: 800 }}>{extraLabel}</span>}
         </span>
       </div>
       <span style={{ fontSize: '14px', fontWeight: 700, color: color || 'var(--text-primary)', fontFamily: 'Orbitron, monospace' }}>

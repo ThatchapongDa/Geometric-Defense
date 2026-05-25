@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { UNIT_DATA, getUnitStats } from '../constants/units';
+import { UNIT_SPRITES } from '../constants/sprites';
 
 const UNIT_ICONS = {
   triangle: '▲',
@@ -61,21 +62,37 @@ export default function UnitInfoModal({ type, onClose }) {
       }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{
-            width: '64px',
-            height: '64px',
-            borderRadius: '12px',
-            background: `linear-gradient(135deg, ${data.color}44, ${data.color}11)`,
-            border: `2px solid ${data.color}`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '32px',
-            color: data.color,
-            textShadow: `0 0 10px ${data.color}`,
-          }}>
-            {UNIT_ICONS[type] || '▲'} 
-          </div>
+          {UNIT_SPRITES[type] ? (
+            <img 
+              src={UNIT_SPRITES[type].portrait || UNIT_SPRITES[type].icon} 
+              alt={data.name}
+              style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '12px',
+                border: `2px solid ${data.color}`,
+                objectFit: 'contain',
+                background: `linear-gradient(135deg, ${data.color}44, ${data.color}11)`,
+                boxShadow: `0 0 12px ${data.color}44`,
+              }}
+            />
+          ) : (
+            <div style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '12px',
+              background: `linear-gradient(135deg, ${data.color}44, ${data.color}11)`,
+              border: `2px solid ${data.color}`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '32px',
+              color: data.color,
+              textShadow: `0 0 10px ${data.color}`,
+            }}>
+              {UNIT_ICONS[type] || '▲'} 
+            </div>
+          )}
           <div style={{ flex: 1 }}>
             <h2 style={{ margin: 0, color: data.color, fontSize: '24px' }}>{data.name}</h2>
             <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>

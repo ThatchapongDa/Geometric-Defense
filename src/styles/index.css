@@ -177,3 +177,46 @@ html, body {
 /* ─── Progress bar ────────────────────────────────────────────────────────── */
 .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
 .progress-fill { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
+
+/* ─── Grayscale Theme / Black & White Mode ─────────────────────────────────── */
+.theme-grayscale {
+  filter: grayscale(1) contrast(1.15) brightness(0.95) !important;
+}
+
+/* ─── High Readability Light Theme ────────────────────────────────────────── */
+.theme-light {
+  --bg-deep:     #F1F5F9; /* Slate-100 (light grey-blue background) */
+  --bg-panel:    #FFFFFF; /* Pure white panel background */
+  --bg-card:     #F8FAFC; /* Slate-50 cards */
+  --bg-hover:    #E2E8F0; /* Slate-200 hover states */
+  --border:      rgba(0, 0, 0, 0.08); /* Light grey borders */
+  --border-glow: rgba(74, 144, 217, 0.35); /* Subtle blue glow */
+
+  --text-primary:   #0F172A; /* Slate-900 (very dark grey for extreme contrast/readability) */
+  --text-secondary: #334155; /* Slate-700 */
+  --text-muted:     #64748B; /* Slate-500 */
+}
+
+/* Light Theme overrides for specific cards and components */
+.theme-light .glass {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1.5px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.08) !important;
+}
+
+.theme-light .btn-secondary {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-secondary);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+.theme-light .btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text-primary);
+}
+
+.theme-light ::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+.theme-light ::-webkit-scrollbar-thumb {
+  background: rgba(74, 144, 217, 0.3);
+}

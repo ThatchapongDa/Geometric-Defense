@@ -237,9 +237,9 @@ export class GameEngine {
           const currentAtkTimer = (enemy.attackTimer || 0) - dt;
           if (currentAtkTimer <= 0) {
             const atkMult = 1 + (state.activeBuffs?.enemyAtkIncrease || 0);
-            const enemyDmg = (enemy.damage || 1) * 20 * atkMult; // 20 flat damage per block
+            const enemyDmg = Math.round((enemy.damage || 1) * 2.0 * atkMult); // Balanced 2.0x damage multiplier to make healers essential
             const newUnitHp = Math.max(0, blocker.currentHp - enemyDmg);
-            this.dispatch({ type: 'UPDATE_UNIT', payload: { id: blocker.id, updates: { currentHp: newUnitHp } } });
+            this.dispatch({ type: 'UPDATE_UNIT', payload: { id: blocker.id, updates: { currentHp: newUnitHp, lastHitTime: Date.now() } } });
             particles.emitHit((blocker.col + 0.5) * CELL_SIZE, (blocker.row + 0.5) * CELL_SIZE, enemyDmg, '#E74C3C', false);
             
             // If blocker dies
@@ -280,9 +280,9 @@ export class GameEngine {
 
           if (targetUnit) {
             const atkMult = 1 + (state.activeBuffs?.enemyAtkIncrease || 0);
-            const enemyDmg = (enemy.damage || 1) * 20 * atkMult;
+            const enemyDmg = Math.round((enemy.damage || 1) * 2.0 * atkMult); // Balanced 2.0x damage multiplier to make healers essential
             const newUnitHp = Math.max(0, targetUnit.currentHp - enemyDmg);
-            this.dispatch({ type: 'UPDATE_UNIT', payload: { id: targetUnit.id, updates: { currentHp: newUnitHp } } });
+            this.dispatch({ type: 'UPDATE_UNIT', payload: { id: targetUnit.id, updates: { currentHp: newUnitHp, lastHitTime: Date.now() } } });
             
             const ux = (targetUnit.col + 0.5) * CELL_SIZE;
             const uy = (targetUnit.row + 0.5) * CELL_SIZE;
@@ -318,7 +318,16 @@ export class GameEngine {
 
       if (wpIdx >= lane.length - 1) {
         const atkMult = 1 + (state.activeBuffs?.enemyAtkIncrease || 0);
-        this.dispatch({ type: 'ENEMY_REACHED_BASE', payload: { id: enemy.id, damage: Math.round(enemy.damage * atkMult) } });
+        
+        // Balanced base damage values to match 20 base max HP:
+        let baseDamage = 1;
+        if (enemy.type === 'boss') baseDamage = 10;
+        else if (enemy.type === 'armored' || enemy.type === 'ranged') baseDamage = 3;
+        else if (enemy.type === 'fast') baseDamage = 2;
+        else baseDamage = 1; // basic, swarm, drone
+        
+        const finalBaseDmg = Math.max(1, Math.round(baseDamage * atkMult));
+        this.dispatch({ type: 'ENEMY_REACHED_BASE', payload: { id: enemy.id, damage: finalBaseDmg } });
         particles.emitDeath(enemy.x, enemy.y, ENEMY_DATA[enemy.type]?.color || '#E74C3C', false);
         return;
       }
@@ -649,7 +658,7 @@ export class GameEngine {
         isBladestorm: opts.isBladestorm || false,
       }});
     } else {
-      this.dispatch({ type: 'UPDATE_ENEMY', payload: { id: enemy.id, updates: { currentHp: newHp } } });
+      this.dispatch({ type: 'UPDATE_ENEMY', payload: { id: enemy.id, updates: { currentHp: newHp, lastHitTime: Date.now() } } });
     }
   }
 
@@ -679,6 +688,7 @@ export class GameEngine {
   _renderGrid(ctx, state) {
     const { units, mapId } = state;
     const pathSet = MAP_PATH_CELLS[mapId] || MAP_PATH_CELLS['tri-path'];
+    const isLightTheme = document.body.classList.contains('theme-light');
 
     for (let col = 0; col < GRID_COLS; col++) {
       for (let row = 0; row < GRID_ROWS; row++) {
@@ -688,10 +698,15 @@ export class GameEngine {
         if (mapId === 'stage4') {
           if (onPath) {
             // Metallic/concrete grey pathway
-            ctx.fillStyle = (col + row) % 2 === 0 ? '#3A3A3C' : '#2C2C2E';
+            if (isLightTheme) {
+              ctx.fillStyle = (col + row) % 2 === 0 ? '#E2E8F0' : '#CBD5E1';
+            } else {
+              ctx.fillStyle = (col + row) % 2 === 0 ? '#3A3A3C' : '#2C2C2E';
+            }
             ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+            
             // Draw subtle crack lines
-            ctx.strokeStyle = 'rgba(230,126,34,0.18)'; // faint glowing orange crack lines
+            ctx.strokeStyle = isLightTheme ? 'rgba(217,119,6,0.25)' : 'rgba(230,126,34,0.18)'; 
             ctx.lineWidth = 1;
             ctx.beginPath();
             if ((col + row) % 3 === 0) {
@@ -706,23 +721,27 @@ export class GameEngine {
             ctx.stroke();
 
             // Safety grid line
-            ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+            ctx.strokeStyle = isLightTheme ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.02)';
             ctx.lineWidth = 0.5;
             ctx.strokeRect(x + 0.5, y + 0.5, CELL_SIZE - 1, CELL_SIZE - 1);
           } else {
-            // High-ground blocks: dark slate/steel blocks
-            ctx.fillStyle = (col + row) % 2 === 0 ? '#202022' : '#1C1C1E';
+            // High-ground blocks: slate/steel blocks
+            if (isLightTheme) {
+              ctx.fillStyle = (col + row) % 2 === 0 ? '#F1F5F9' : '#E2E8F0';
+            } else {
+              ctx.fillStyle = (col + row) % 2 === 0 ? '#202022' : '#1C1C1E';
+            }
             ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
             
             // Draw industrial borders
-            ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+            ctx.strokeStyle = isLightTheme ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.06)';
             ctx.lineWidth = 1;
             ctx.strokeRect(x + 1.5, y + 1.5, CELL_SIZE - 3, CELL_SIZE - 3);
             
             // Draw a subtle hazard accent (yellow/black stripe indicator) on some high ground tiles
             if ((col * row) % 7 === 1) {
               ctx.save();
-              ctx.fillStyle = 'rgba(212,144,26,0.2)'; // semi-transparent yellow
+              ctx.fillStyle = isLightTheme ? 'rgba(217,119,6,0.25)' : 'rgba(212,144,26,0.2)'; 
               ctx.beginPath();
               ctx.moveTo(x + 4, y + 4);
               ctx.lineTo(x + 16, y + 4);
@@ -735,21 +754,29 @@ export class GameEngine {
         } else {
           // Standard map styling
           if (onPath) {
-            // Ground lane — darker stone texture
-            ctx.fillStyle = (col + row) % 2 === 0 ? 'rgba(22,16,10,0.97)' : 'rgba(18,13,8,0.97)';
+            // Ground lane — darker stone texture vs beautiful light bluish grey
+            if (isLightTheme) {
+              ctx.fillStyle = (col + row) % 2 === 0 ? '#E6EEF8' : '#D0E1F9';
+            } else {
+              ctx.fillStyle = (col + row) % 2 === 0 ? 'rgba(22,16,10,0.97)' : 'rgba(18,13,8,0.97)';
+            }
           } else {
-            // Elevated platform — glassy teal-tinged surface
-            ctx.fillStyle = (col + row) % 2 === 0 ? 'rgba(10,20,35,0.92)' : 'rgba(8,16,28,0.92)';
+            // Elevated platform — glassy teal surface vs clean slate off-white
+            if (isLightTheme) {
+              ctx.fillStyle = (col + row) % 2 === 0 ? '#F8FAFC' : '#F1F5F9';
+            } else {
+              ctx.fillStyle = (col + row) % 2 === 0 ? 'rgba(10,20,35,0.92)' : 'rgba(8,16,28,0.92)';
+            }
           }
           ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
 
           // Elevated platform subtle glow border
           if (!onPath) {
-            ctx.strokeStyle = 'rgba(80,160,255,0.07)';
+            ctx.strokeStyle = isLightTheme ? 'rgba(0, 0, 0, 0.08)' : 'rgba(80,160,255,0.07)';
             ctx.lineWidth = 0.5;
             ctx.strokeRect(x + 0.5, y + 0.5, CELL_SIZE - 1, CELL_SIZE - 1);
           } else {
-            ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+            ctx.strokeStyle = isLightTheme ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255,255,255,0.03)';
             ctx.lineWidth = 0.5;
             ctx.strokeRect(x + 0.5, y + 0.5, CELL_SIZE - 1, CELL_SIZE - 1);
           }
@@ -1095,12 +1122,37 @@ export class GameEngine {
 
       // Try to draw sprite image; fallback to geometric shape
       const spriteImg = getUnitSprite(unit.type, unit.facing || 'right');
+      const isHitRecently = unit.lastHitTime && (Date.now() - unit.lastHitTime < 180);
+      
       if (spriteImg && spriteImg.complete && spriteImg.naturalWidth > 0) {
-        const drawSize = CELL_SIZE * 0.85;
-        ctx.drawImage(spriteImg, px - drawSize / 2, py - drawSize / 2, drawSize, drawSize);
+        const drawSize = CELL_SIZE * 0.98; // Increased from 0.85 to make character stand out
+        
+        // Calculate aspect-ratio preserved dimensions
+        let dw = drawSize;
+        let dh = drawSize;
+        const aspect = spriteImg.naturalWidth / spriteImg.naturalHeight;
+        
+        if (aspect > 1) {
+          // Wider than tall
+          dh = drawSize / aspect;
+        } else if (aspect < 1) {
+          // Taller than wide
+          dw = drawSize * aspect;
+        }
+        
+        ctx.drawImage(spriteImg, px - dw / 2, py - dh / 2, dw, dh);
+        
+        // Visual hit effect: flash red using source-atop blend mode
+        if (isHitRecently) {
+          ctx.save();
+          ctx.globalCompositeOperation = 'source-atop';
+          ctx.fillStyle = 'rgba(255, 0, 0, 0.6)';
+          ctx.fillRect(px - dw / 2, py - dh / 2, dw, dh);
+          ctx.restore();
+        }
       } else {
         // Fallback: draw geometric shape
-        ctx.fillStyle = data.color;
+        ctx.fillStyle = isHitRecently ? '#FF5252' : data.color;
         this._drawShape(ctx, data.shape, px, py, size, unit.tier);
         ctx.fill();
 
@@ -1254,7 +1306,15 @@ export class GameEngine {
       }
 
       // Enemy body
-      ctx.fillStyle = isSlowed ? this._mixColor(data.color, '#87CEEB', 0.4) : data.color;
+      const isEnemyHitRecently = enemy.lastHitTime && (Date.now() - enemy.lastHitTime < 180);
+      let bodyColor = data.color;
+      if (isEnemyHitRecently) {
+        bodyColor = '#FF5252'; // Red flash color when hit
+      } else if (isSlowed) {
+        bodyColor = this._mixColor(data.color, '#87CEEB', 0.4);
+      }
+
+      ctx.fillStyle = bodyColor;
       ctx.beginPath();
       if (isAerial) {
         this._drawDroneShape(ctx, x, drawY, size);

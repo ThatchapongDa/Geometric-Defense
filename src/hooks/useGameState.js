@@ -42,9 +42,29 @@ export const BUFF_CARDS = [
   { id: 'deployment_limit', title: '👥 Extra Tactical', desc: 'ขยายจำนวนโควต้ายูนิตสูงสุดในสนามได้ +1 ตัว (แต่บวก HP ศัตรู +100 HP)', icon: '👥', buffType: 'deploymentLimit', value: 1 },
 ];
 
-function getRandomDraftCards() {
-  const shuffled = [...BUFF_CARDS].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, 3);
+function getRandomDraftCards(currentHp, maxHp) {
+  const isLowHp = currentHp && maxHp ? (currentHp / maxHp < 0.40) : false;
+  
+  // 50% chance to draw the special base recovery card under crisis (<40% HP)
+  const includeRecovery = isLowHp && Math.random() < 0.50;
+  
+  if (includeRecovery) {
+    const recoveryCard = {
+      id: 'base_recovery',
+      title: '💖 ฐานทัพฟื้นคืน (HP +20%)',
+      desc: 'ฟื้นฟูพลังชีวิตฐานทัพทันที +20% ของ HP สูงสุด (บัฟพิเศษช่วยชีวิต ไม่มีดีบัพแฝง!)',
+      icon: '💖',
+      buffType: 'none',
+      value: 0
+    };
+    
+    const shuffled = [...BUFF_CARDS].sort(() => 0.5 - Math.random());
+    const cards = [recoveryCard, ...shuffled.slice(0, 2)];
+    return cards.sort(() => 0.5 - Math.random());
+  } else {
+    const shuffled = [...BUFF_CARDS].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 3);
+  }
 }
 
 // ─── Initial State ────────────────────────────────────────────────────────────
@@ -78,6 +98,8 @@ export const INITIAL_STATE = {
   bladestormCount: 0,
   hpAtWave5Start: null,
   paused: false,
+  grayscaleTheme: (typeof window !== 'undefined' && localStorage.getItem('gd_settings_grayscaleTheme') === 'true'),
+  lightTheme: (typeof window !== 'undefined' && localStorage.getItem('gd_settings_lightTheme') === 'true'),
   showCardDraft: false,
   draftCards: [],
   // Difficulty contracts & Score multiplier
@@ -477,7 +499,7 @@ function reducer(state, action) {
       }
 
       // Draw Buff Cards
-      const cards = getRandomDraftCards();
+      const cards = getRandomDraftCards(state.hp, state.maxHp);
       soundManager.playWaveCleared();
       let s = {
         ...state,
@@ -503,6 +525,17 @@ function reducer(state, action) {
     case 'CHOOSE_DRAFT_CARD': {
       const card = action.payload;
       soundManager.playUnitUpgraded();
+      
+      if (card.id === 'base_recovery') {
+        const recoverAmount = Math.round(state.maxHp * 0.20);
+        const newHp = Math.min(state.maxHp, state.hp + recoverAmount);
+        return {
+          ...state,
+          showCardDraft: false,
+          draftCards: [],
+          hp: newHp,
+        };
+      }
       
       const newUnits = { ...state.units };
       
@@ -673,6 +706,18 @@ function reducer(state, action) {
       soundManager.setVolume(action.payload);
       return { ...state, volume: action.payload };
 
+    case 'SET_GRAYSCALE_THEME':
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('gd_settings_grayscaleTheme', action.payload ? 'true' : 'false');
+      }
+      return { ...state, grayscaleTheme: action.payload };
+
+    case 'SET_LIGHT_THEME':
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('gd_settings_lightTheme', action.payload ? 'true' : 'false');
+      }
+      return { ...state, lightTheme: action.payload };
+
     case 'SET_TUTORIAL_STEP':
       return { ...state, tutorialStep: action.payload };
 
@@ -694,6 +739,8 @@ function reducer(state, action) {
         activeBuffs: state.activeBuffs,
         selectedContracts: state.selectedContracts,
         scoreMultiplier: state.scoreMultiplier,
+        grayscaleTheme: state.grayscaleTheme,
+        lightTheme: state.lightTheme,
       };
       localStorage.setItem('gd_save', JSON.stringify(save));
       return state;
@@ -710,6 +757,20 @@ function reducer(state, action) {
         soundManager.setEnabled(state.soundEnabled);
         soundManager.setVolume(state.volume);
         soundManager.startBGM();
+
+        // Apply theme-grayscale class to body during load if enabled
+        if (save.grayscaleTheme) {
+          document.body.classList.add('theme-grayscale');
+        } else {
+          document.body.classList.remove('theme-grayscale');
+        }
+
+        // Apply theme-light class to body during load if enabled
+        if (save.lightTheme) {
+          document.body.classList.add('theme-light');
+        } else {
+          document.body.classList.remove('theme-light');
+        }
 
         return {
           ...INITIAL_STATE,
@@ -769,6 +830,8 @@ export function useGameState() {
     updatePuddles:   (dt)    => dispatch({ type: 'UPDATE_PUDDLES', dt }),
     setSound:        (val)   => dispatch({ type: 'SET_SOUND', payload: val }),
     setVolume:       (val)   => dispatch({ type: 'SET_VOLUME', payload: val }),
+    setGrayscaleTheme:(val)  => dispatch({ type: 'SET_GRAYSCALE_THEME', payload: val }),
+    setLightTheme:   (val)  => dispatch({ type: 'SET_LIGHT_THEME', payload: val }),
     setTutorialStep: (step)  => dispatch({ type: 'SET_TUTORIAL_STEP', payload: step }),
     tutorialDone:    ()      => dispatch({ type: 'TUTORIAL_DONE' }),
     saveGame:        ()      => dispatch({ type: 'SAVE_GAME' }),

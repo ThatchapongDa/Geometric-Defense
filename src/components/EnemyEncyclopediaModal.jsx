@@ -1,6 +1,6 @@
 import React from 'react';
 import { ENEMY_DATA } from '../constants/enemies';
-import { ENEMY_SPRITES, getSpriteImage } from '../constants/sprites';
+import { ENEMY_SPRITES } from '../constants/sprites';
 
 export default function EnemyEncyclopediaModal({ onClose }) {
   return (
@@ -61,85 +61,98 @@ export default function EnemyEncyclopediaModal({ onClose }) {
           gap: '20px',
         }}>
           {Object.entries(ENEMY_DATA).map(([type, data]) => (
-            <div key={type} style={{
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.05)',
-              borderRadius: '12px',
-              padding: '16px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px'
-            }}>
-              {/* Header: Icon + Name */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{
-                  width: '40px', height: '40px',
-                  background: 'rgba(0,0,0,0.4)',
-                  border: `1.5px solid ${data.color}`,
-                  borderRadius: '8px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: data.color,
-                  fontSize: '20px',
-                  boxShadow: `0 0 10px ${data.color}44`,
-                  overflow: 'hidden',
-                }}>
-                  {ENEMY_SPRITES[type] && getSpriteImage(ENEMY_SPRITES[type].icon) ? (
-                    <img src={ENEMY_SPRITES[type].icon} alt={type} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                  ) : (
-                    data.shape
-                  )}
-                </div>
-                <div>
-                  <div style={{ fontSize: '16px', fontWeight: 700, color: data.color, textTransform: 'capitalize' }}>
-                    {data.name || type}
-                  </div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                    {data.isAir ? '✈️ Aerial' : '🚶 Ground'}
-                  </div>
-                </div>
-              </div>
-
-              {/* Stats */}
-              <div style={{
-                display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px',
-                background: 'rgba(0,0,0,0.3)', padding: '12px', borderRadius: '8px'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>❤️ Base HP</span>
-                  <span style={{ fontSize: '13px', fontWeight: 600 }}>{data.baseHp}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>👟 Speed</span>
-                  <span style={{ fontSize: '13px', fontWeight: 600 }}>{data.baseSpeed}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>⚔️ Damage</span>
-                  <span style={{ fontSize: '13px', fontWeight: 600 }}>{data.damage || 1}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>💰 Reward</span>
-                  <span style={{ fontSize: '13px', fontWeight: 600 }}>{data.reward}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>🛡️ DEF</span>
-                  <span style={{ fontSize: '13px', fontWeight: 600 }}>{data.def || 0}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>✨ RES</span>
-                  <span style={{ fontSize: '13px', fontWeight: 600 }}>{data.res || 0}</span>
-                </div>
-              </div>
-
-              {/* Description */}
-              {data.desc && (
-                <div style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4, borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '12px' }}>
-                  {data.desc}
-                </div>
-              )}
-            </div>
+            <EnemyCard key={type} type={type} data={data} />
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+function EnemyCard({ type, data }) {
+  const [imgError, setImgError] = React.useState(false);
+
+  return (
+    <div style={{
+      background: 'rgba(255,255,255,0.02)',
+      border: '1px solid rgba(255,255,255,0.05)',
+      borderRadius: '12px',
+      padding: '16px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '12px'
+    }}>
+      {/* Header: Icon + Name */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{
+          width: '40px', height: '40px',
+          background: 'rgba(0,0,0,0.4)',
+          border: `1.5px solid ${data.color}`,
+          borderRadius: '8px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: data.color,
+          fontSize: '20px',
+          boxShadow: `0 0 10px ${data.color}44`,
+          overflow: 'hidden',
+        }}>
+          {ENEMY_SPRITES[type] && !imgError ? (
+            <img 
+              src={ENEMY_SPRITES[type].icon} 
+              alt={type} 
+              onError={() => setImgError(true)}
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+            />
+          ) : (
+            data.shape
+          )}
+        </div>
+        <div>
+          <div style={{ fontSize: '16px', fontWeight: 700, color: data.color, textTransform: 'capitalize' }}>
+            {data.name || type}
+          </div>
+          <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+            {data.isAir ? '✈️ Aerial' : '🚶 Ground'}
+          </div>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div style={{
+        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px',
+        background: 'rgba(0,0,0,0.3)', padding: '12px', borderRadius: '8px'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>❤️ Base HP</span>
+          <span style={{ fontSize: '13px', fontWeight: 600 }}>{data.baseHp}</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>👟 Speed</span>
+          <span style={{ fontSize: '13px', fontWeight: 600 }}>{data.baseSpeed}</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>⚔️ Damage</span>
+          <span style={{ fontSize: '13px', fontWeight: 600 }}>{data.damage || 1}</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>💰 Reward</span>
+          <span style={{ fontSize: '13px', fontWeight: 600 }}>{data.reward}</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>🛡️ DEF</span>
+          <span style={{ fontSize: '13px', fontWeight: 600 }}>{data.def || 0}</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>✨ RES</span>
+          <span style={{ fontSize: '13px', fontWeight: 600 }}>{data.res || 0}</span>
+        </div>
+      </div>
+
+      {/* Description */}
+      {data.desc && (
+        <div style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4, borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '12px' }}>
+          {data.desc}
+        </div>
+      )}
     </div>
   );
 }

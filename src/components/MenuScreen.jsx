@@ -21,7 +21,7 @@ const CONTRACTS = [
   { id: 'enemy_def_buff', label: '🛡️ Heavy Shielding', desc: 'ศัตรูแกร่งขึ้น (DEF +30, RES +15%)', scoreBonus: 0.60 },
 ];
 
-export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {} }) {
+export default function MenuScreen({ state, actions, onStart, onLoad, hasSave, achievements = {}, onOpenUnitGallery }) {
   const [selectedMapId, setSelectedMapId] = useState('tri-path');
   const [selectedContracts, setSelectedContracts] = useState({});
   const [activeTab, setActiveTab] = useState('trophy'); // 'trophy' | 'enemies'
@@ -37,16 +37,108 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
     }
   });
 
+  const isLightTheme = state?.lightTheme || false;
+  const menuBackground = isLightTheme
+    ? 'radial-gradient(ellipse at 50% 30%, #E6EEF8 0%, var(--bg-deep) 100%)'
+    : 'radial-gradient(ellipse at 50% 30%, #0D1B3E 0%, var(--bg-deep) 100%)';
+
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 500,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'radial-gradient(ellipse at 50% 30%, #0D1B3E 0%, #070B14 100%)',
+      background: menuBackground,
       overflowY: 'auto',
       padding: '24px 16px',
     }}>
       {/* Animated background shapes */}
       <BackgroundShapes />
+
+      {/* Floating Theme Selector Widget */}
+      {state && actions && (
+        <div style={{
+          position: 'absolute',
+          top: '16px',
+          right: '16px',
+          display: 'flex',
+          gap: '8px',
+          zIndex: 1000,
+          background: 'var(--bg-panel)',
+          border: '1px solid var(--border)',
+          padding: '6px 12px',
+          borderRadius: '12px',
+          backdropFilter: 'blur(8px)',
+          alignItems: 'center',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+        }}>
+          <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginRight: '4px', fontFamily: 'Orbitron, monospace' }}>🎨 THEME:</span>
+          <button
+            onClick={() => {
+              actions.setLightTheme(false);
+              actions.setGrayscaleTheme(false);
+              document.body.classList.remove('theme-light');
+              document.body.classList.remove('theme-grayscale');
+            }}
+            style={{
+              background: (!state.lightTheme && !state.grayscaleTheme) ? 'var(--bg-hover)' : 'transparent',
+              border: 'none',
+              borderRadius: '6px',
+              color: (!state.lightTheme && !state.grayscaleTheme) ? '#4A90D9' : 'var(--text-muted)',
+              fontSize: '11px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              padding: '4px 8px',
+              fontFamily: 'Orbitron, monospace',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            DARK
+          </button>
+          <button
+            onClick={() => {
+              actions.setLightTheme(true);
+              actions.setGrayscaleTheme(false);
+              document.body.classList.add('theme-light');
+              document.body.classList.remove('theme-grayscale');
+            }}
+            style={{
+              background: state.lightTheme ? 'var(--bg-hover)' : 'transparent',
+              border: 'none',
+              borderRadius: '6px',
+              color: state.lightTheme ? '#E8643A' : 'var(--text-muted)',
+              fontSize: '11px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              padding: '4px 8px',
+              fontFamily: 'Orbitron, monospace',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            LIGHT
+          </button>
+          <button
+            onClick={() => {
+              actions.setLightTheme(false);
+              actions.setGrayscaleTheme(true);
+              document.body.classList.remove('theme-light');
+              document.body.classList.add('theme-grayscale');
+            }}
+            style={{
+              background: state.grayscaleTheme ? 'var(--bg-hover)' : 'transparent',
+              border: 'none',
+              borderRadius: '6px',
+              color: state.grayscaleTheme ? 'var(--text-primary)' : 'var(--text-muted)',
+              fontSize: '11px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              padding: '4px 8px',
+              fontFamily: 'Orbitron, monospace',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            B&W
+          </button>
+        </div>
+      )}
 
       <div style={{
         zIndex: 1,
@@ -132,8 +224,8 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {/* Map selection */}
             <div style={{
-              background: 'rgba(7,11,20,0.7)',
-              border: '1px solid rgba(255,255,255,0.06)',
+              background: 'var(--bg-panel)',
+              border: '1px solid var(--border)',
               borderRadius: '16px',
               padding: '20px',
               backdropFilter: 'blur(12px)',
@@ -148,7 +240,7 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
                 color: '#4A90D9',
                 letterSpacing: '1px',
                 textTransform: 'uppercase',
-                borderBottom: '1px solid rgba(255,255,255,0.08)',
+                borderBottom: '1px solid var(--border)',
                 paddingBottom: '8px',
               }}>
                 🗺️ Select Mission Map
@@ -162,8 +254,8 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
                       key={id}
                       onClick={() => setSelectedMapId(id)}
                       style={{
-                        background: isSelected ? 'rgba(74,144,217,0.12)' : 'rgba(255,255,255,0.02)',
-                        border: isSelected ? '1.5px solid #4A90D9' : '1px solid rgba(255,255,255,0.06)',
+                        background: isSelected ? 'rgba(74,144,217,0.15)' : 'var(--bg-card)',
+                        border: isSelected ? '1.5px solid #4A90D9' : '1px solid var(--border)',
                         borderRadius: '12px',
                         padding: '12px 16px',
                         cursor: 'pointer',
@@ -176,23 +268,21 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
                       }}
                       onMouseEnter={e => {
                         if (!isSelected) {
-                          e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
+                          e.currentTarget.style.background = 'var(--bg-hover)';
                         }
                       }}
                       onMouseLeave={e => {
                         if (!isSelected) {
-                          e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
-                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
+                          e.currentTarget.style.background = 'var(--bg-card)';
                         }
                       }}
                     >
                       <span style={{ fontSize: '28px' }}>{map.icon}</span>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                        <span style={{ fontSize: '14px', fontWeight: 700, color: isSelected ? '#4A90D9' : '#fff' }}>
+                        <span style={{ fontSize: '14px', fontWeight: 700, color: isSelected ? '#4A90D9' : 'var(--text-primary)' }}>
                           {map.name}
                         </span>
-                        <span style={{ fontSize: '11px', color: 'var(--text-muted)', lineHeight: 1.3 }}>
+                        <span style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.3 }}>
                           {map.desc}
                         </span>
                       </div>
@@ -204,8 +294,8 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
 
             {/* Pre-game Contingency Contracts (Debuffs) */}
             <div style={{
-              background: 'rgba(7,11,20,0.7)',
-              border: '1px solid rgba(255,255,255,0.06)',
+              background: 'var(--bg-panel)',
+              border: '1px solid var(--border)',
               borderRadius: '16px',
               padding: '20px',
               backdropFilter: 'blur(12px)',
@@ -220,7 +310,7 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
                 color: '#E8643A',
                 letterSpacing: '1px',
                 textTransform: 'uppercase',
-                borderBottom: '1px solid rgba(255,255,255,0.08)',
+                borderBottom: '1px solid var(--border)',
                 paddingBottom: '8px',
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -240,8 +330,8 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
                         alignItems: 'flex-start',
                         gap: '10px',
                         padding: '10px 12px',
-                        background: checked ? 'rgba(232,100,58,0.08)' : 'rgba(255,255,255,0.01)',
-                        border: checked ? '1.5px solid #E8643A' : '1px solid rgba(255,255,255,0.04)',
+                        background: checked ? 'rgba(232,100,58,0.08)' : 'var(--bg-card)',
+                        border: checked ? '1.5px solid #E8643A' : '1px solid var(--border)',
                         borderRadius: '8px',
                         cursor: 'pointer',
                         transition: 'all 0.15s',
@@ -256,10 +346,10 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
                         style={{ marginTop: '3px', cursor: 'pointer' }}
                       />
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                        <span style={{ fontSize: '12px', fontWeight: 700, color: checked ? '#E8643A' : '#ccc' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 700, color: checked ? '#E8643A' : 'var(--text-primary)' }}>
                           {c.label} <span style={{ color: '#F0B429', fontSize: '10px', marginLeft: '4px' }}>+{Math.round(c.scoreBonus*100)}% Score</span>
                         </span>
-                        <span style={{ fontSize: '10px', color: 'var(--text-muted)', lineHeight: 1.3 }}>{c.desc}</span>
+                        <span style={{ fontSize: '10px', color: 'var(--text-secondary)', lineHeight: 1.3 }}>{c.desc}</span>
                       </div>
                     </label>
                   );
@@ -270,8 +360,8 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
 
           {/* Column 2: Trophy Box vs Enemy Database (Tabs) */}
           <div style={{
-            background: 'rgba(7,11,20,0.7)',
-            border: '1px solid rgba(255,255,255,0.06)',
+            background: 'var(--bg-panel)',
+            border: '1px solid var(--border)',
             borderRadius: '16px',
             padding: '20px',
             backdropFilter: 'blur(12px)',
@@ -373,8 +463,8 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
                         gap: '12px',
                         padding: '8px 12px',
                         borderRadius: '10px',
-                        background: isUnlocked ? 'rgba(240,180,41,0.05)' : 'rgba(0,0,0,0.2)',
-                        border: isUnlocked ? '1px solid rgba(240,180,41,0.25)' : '1px solid rgba(255,255,255,0.03)',
+                        background: isUnlocked ? 'rgba(240,180,41,0.05)' : 'var(--bg-card)',
+                        border: isUnlocked ? '1px solid rgba(240,180,41,0.25)' : '1px solid var(--border)',
                         opacity: isUnlocked ? 1 : 0.45,
                       }}
                     >
@@ -383,7 +473,7 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
                         filter: isUnlocked ? 'none' : 'grayscale(100%)',
                       }}>{def.icon}</span>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                        <span style={{ fontSize: '12px', fontWeight: 700, color: isUnlocked ? '#F0B429' : '#ccc' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 700, color: isUnlocked ? '#F0B429' : 'var(--text-primary)' }}>
                           {def.label}
                         </span>
                         <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
@@ -424,8 +514,8 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
                       gap: '6px',
                       padding: '10px',
                       borderRadius: '10px',
-                      background: 'rgba(255,255,255,0.02)',
-                      border: '1px solid rgba(255,255,255,0.04)',
+                      background: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
                       transition: 'all 0.2s',
                     }}
                   >
@@ -438,7 +528,7 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
                         textAlign: 'center',
                       }}>{enemy.icon}</span>
                       <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontSize: '12px', fontWeight: 700, color: '#fff' }}>{enemy.name}</span>
+                        <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>{enemy.name}</span>
                         <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px', lineHeight: 1.3 }}>{enemy.desc}</span>
                       </div>
                     </div>
@@ -493,12 +583,29 @@ export default function MenuScreen({ onStart, onLoad, hasSave, achievements = {}
                 fontSize: 14,
                 padding: '12px 32px',
                 fontFamily: 'Orbitron, monospace',
-                border: '1px solid rgba(255,255,255,0.15)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-primary)',
               }}
             >
               📂 CONTINUE GAME
             </button>
           )}
+
+          <button
+            id="btn-unit-gallery"
+            className="btn btn-secondary"
+            onClick={onOpenUnitGallery}
+            style={{
+              fontSize: 14,
+              padding: '12px 32px',
+              fontFamily: 'Orbitron, monospace',
+              border: '1px solid rgba(240, 180, 41, 0.4)',
+              color: '#F0B429',
+              background: 'rgba(240, 180, 41, 0.1)',
+            }}
+          >
+            🛡️ UNIT GALLERY
+          </button>
         </div>
 
         {/* CSS styles for responsive grid */}

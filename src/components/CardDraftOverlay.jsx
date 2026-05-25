@@ -3,8 +3,11 @@
 
 import React from 'react';
 
-export default function CardDraftOverlay({ draftCards, onSelect }) {
+export default function CardDraftOverlay({ draftCards, onSelect, onOpenBuffInfo, state }) {
   if (!draftCards || draftCards.length === 0) return null;
+
+  const activeBuffsCount = Object.values(state?.activeBuffs || {}).filter(v => v > 0).length + 
+                           Object.keys(state?.selectedContracts || {}).filter(k => state?.selectedContracts[k]).length;
 
   return (
     <div style={{
@@ -22,7 +25,7 @@ export default function CardDraftOverlay({ draftCards, onSelect }) {
       animation: 'fadeIn 0.4s ease-out forwards',
     }}>
       {/* Title block */}
-      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '32px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h2 style={{
           fontFamily: 'Orbitron, monospace',
           fontSize: 'clamp(20px, 4vw, 32px)',
@@ -43,6 +46,40 @@ export default function CardDraftOverlay({ draftCards, onSelect }) {
         }}>
           เลือกการ์ดความสามารถพิเศษเพื่ออัปเกรดแผนการเล่นของคุณ (มีผลตลอดเกมนี้)
         </p>
+
+        {onOpenBuffInfo && (
+          <button
+            className="btn btn-secondary"
+            onClick={onOpenBuffInfo}
+            style={{
+              marginTop: '20px',
+              padding: '8px 24px',
+              fontSize: '12px',
+              borderRadius: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              color: '#fff',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'rgba(240, 180, 41, 0.15)';
+              e.currentTarget.style.borderColor = '#F0B429';
+              e.currentTarget.style.color = '#F0B429';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+              e.currentTarget.style.color = '#fff';
+            }}
+          >
+            ⚡ ดูบัฟ & ความเสี่ยงปัจจุบันที่ได้รับไปแล้ว ({activeBuffsCount})
+          </button>
+        )}
       </div>
 
       {/* Cards list */}

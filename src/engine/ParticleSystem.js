@@ -118,15 +118,15 @@ class ParticleSystem {
     const dx = targetX - x;
     const dy = targetY - y;
     const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-    const speed = 300;
-    // Projectile trail
-    for (let i = 0; i < 3; i++) {
+    const speed = 340; // Slightly faster projectile motion
+    // Projectile trail - expanded count from 3 to 8 for a thicker, richer line trail
+    for (let i = 0; i < 8; i++) {
       this._spawn({
         x, y,
-        vx: (dx / dist) * speed + (Math.random() - 0.5) * 40,
-        vy: (dy / dist) * speed + (Math.random() - 0.5) * 40,
-        life: 0.15 + Math.random() * 0.1,
-        size: isCrit ? 5 : 3,
+        vx: (dx / dist) * speed + (Math.random() - 0.5) * 60,
+        vy: (dy / dist) * speed + (Math.random() - 0.5) * 60,
+        life: 0.18 + Math.random() * 0.12,
+        size: isCrit ? 8 : 5, // Expanded sizes
         color: isCrit ? '#FFD700' : color,
         type: 'spark',
         gravity: 0,
@@ -139,27 +139,28 @@ class ParticleSystem {
     this._spawn({
       x, y: y - 10,
       vx: (Math.random() - 0.5) * 20,
-      vy: -20,
-      life: isCrit ? 1.2 : 0.9,
-      size: isCrit ? 18 : 14,
+      vy: -25,
+      life: isCrit ? 1.3 : 1.0,
+      size: isCrit ? 20 : 15,
       color: isCrit ? '#FFD700' : color,
       type: isCrit ? 'crit' : 'damage',
       text: isCrit ? `💥${damage}` : `${damage}`,
       gravity: 0,
     });
-    // Impact sparks
-    for (let i = 0; i < (isCrit ? 8 : 4); i++) {
-      const angle = (Math.PI * 2 * i) / (isCrit ? 8 : 4) + Math.random() * 0.5;
-      const speed = 60 + Math.random() * 80;
+    // Impact sparks - expanded counts from 8/4 to 16/8 for highly satisfying explosion weight
+    const sparkCount = isCrit ? 16 : 8;
+    for (let i = 0; i < sparkCount; i++) {
+      const angle = (Math.PI * 2 * i) / sparkCount + Math.random() * 0.5;
+      const speed = 80 + Math.random() * 120; // Increased explosion speed
       this._spawn({
         x, y,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
-        life: 0.2 + Math.random() * 0.2,
-        size: 2 + Math.random() * 3,
+        life: 0.25 + Math.random() * 0.25,
+        size: 3 + Math.random() * 4, // Larger sparks
         color: isCrit ? '#FFD700' : color,
         type: 'spark',
-        gravity: 200,
+        gravity: 250, // Higher gravity for quick dispersion
       });
     }
   }

@@ -56,6 +56,44 @@ export default function SettingsPanel({ state, actions, onClose }) {
           </div>
         </Section>
 
+        {/* Theme settings */}
+        <Section title="🎨 Themes (ปรับเปลี่ยนธีม)">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+            <label style={{ fontSize: 13, color: 'var(--text-secondary)', flex: 1 }}>
+              Black & White (ภาพขาว-ดำ)
+            </label>
+            <ToggleSwitch
+              id="toggle-bw-theme"
+              value={state.grayscaleTheme || false}
+              onChange={(val) => {
+                actions.setGrayscaleTheme(val);
+                if (val) {
+                  document.body.classList.add('theme-grayscale');
+                } else {
+                  document.body.classList.remove('theme-grayscale');
+                }
+              }}
+            />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <label style={{ fontSize: 13, color: 'var(--text-secondary)', flex: 1 }}>
+              Light Theme (ธีมสว่างอ่านง่าย)
+            </label>
+            <ToggleSwitch
+              id="toggle-light-theme"
+              value={state.lightTheme || false}
+              onChange={(val) => {
+                actions.setLightTheme(val);
+                if (val) {
+                  document.body.classList.add('theme-light');
+                } else {
+                  document.body.classList.remove('theme-light');
+                }
+              }}
+            />
+          </div>
+        </Section>
+
         {/* Save / Load */}
         <Section title="💾 Save / Load">
           <div style={{ display: 'flex', gap: 8 }}>

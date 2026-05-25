@@ -5,38 +5,38 @@ import React from 'react';
 
 const STEPS = [
   {
-    title: 'Welcome to Geometric Defense!',
-    content: 'Defend your base against waves of geometric enemies. Place units on the grid to attack enemies as they travel along the glowing paths.',
+    title: 'ยินดีต้อนรับสู่ Geometric Defense!',
+    content: 'ปกป้องฐานของคุณจากระลอกศัตรูเรขาคณิต วางยูนิตบนตารางเพื่อโจมตีศัตรูในขณะที่พวกมันเดินทางไปตามเส้นทางเรืองแสง',
     highlight: null,
     icon: '🎮',
   },
   {
-    title: 'Select a Unit',
-    content: 'Click any unit card in the left panel to select it. Each unit has a unique role — Triangle for damage, Square for blocking, Circle for healing, Pentagon for AOE, and Hexagon for slowing.',
+    title: 'เลือกยูนิตของคุณ',
+    content: 'คลิกการ์ดยูนิตที่แถบด้านซ้ายเพื่อเลือก ยูนิตแต่ละประเภทมีหน้าที่เฉพาะตัว — Triangle (สามเหลี่ยม) เน้นทำดาเมจ, Square (สี่เหลี่ยม) ใช้บล็อกศัตรู, Circle (วงกลม) ใช้ฮีลเพิ่มเลือด, Pentagon (ห้าเหลี่ยม) โจมตีหมู่ AOE และ Hexagon (หกเหลี่ยม) ช่วยลดความเร็วศัตรู',
     highlight: '#unit-btn-triangle',
     icon: '▲',
   },
   {
-    title: 'Place Units on the Grid',
-    content: 'After selecting a unit, click any empty cell on the grid (not on a path!) to place it. Units cost Energy — earn more by defeating enemies.',
+    title: 'วางยูนิตลงบนตาราง',
+    content: 'หลังจากเลือกยูนิตแล้ว คลิกช่องว่างบนตาราง (ที่ไม่ใช่บนเส้นทางเดินศัตรู!) เพื่อวางยูนิต การวางยูนิตต้องใช้พลังงาน (Energy) — สะสมพลังงานเพิ่มได้จากการกำจัดศัตรู',
     highlight: '#game-canvas',
     icon: '📍',
   },
   {
-    title: 'Upgrade Your Units',
-    content: 'Click a placed unit to see its stats. Upgrade to Tier II or Tier III to boost damage, HP, and range. Tier III unlocks a powerful special skill!',
+    title: 'อัปเกรดยูนิต',
+    content: 'คลิกที่ยูนิตที่วางอยู่เพื่อดูพลังความสามารถ อัปเกรดเป็น Tier II หรือ Tier III เพื่อเพิ่มพลังโจมตี, HP และระยะยิง โดยยูนิต Tier III จะปลดล็อกสกิลพิเศษสุดแกร่ง!',
     highlight: null,
     icon: '⬆️',
   },
   {
-    title: 'Start Waves',
-    content: 'Click "Start Wave" in the top bar when you\'re ready. Enemies follow the colored paths. If they reach the right edge, you lose Base HP!',
+    title: 'เริ่มเวฟศัตรู',
+    content: 'คลิกปุ่ม "Start Wave" ที่แถบด้านบนเมื่อคุณพร้อม ศัตรูจะเดินตามเส้นทางสีต่างๆ หากพวกมันทะลุไปถึงสุดขอบขวา คุณจะเสียพลังชีวิตของฐาน (Base HP)!',
     highlight: '#btn-start-wave',
     icon: '🌊',
   },
   {
-    title: 'Unlock Achievements & Combos',
-    content: 'Click the 🏆 Trophy button in the top bar to view Achievements! Deploy adjacent units to trigger powerful synergies like the "Melee Vanguard" (+20% Guard Attack Speed).',
+    title: 'ปลดล็อกความสำเร็จและคอมโบ',
+    content: 'คลิกปุ่มถ้วยรางวัล 🏆 ที่แถบด้านบนเพื่อดู "ความสำเร็จ" (Achievements)! และลองวางยูนิตที่ส่งเสริมกันให้อยู่ติดกันเพื่อเปิดใช้งานบัฟคอมโบสุดแกร่ง เช่น "Melee Vanguard" (+ความเร็วโจมตีของยูนิตบล็อก 20%)',
     highlight: '#btn-achievements',
     icon: '🏆',
   },
@@ -91,14 +91,14 @@ export default function Tutorial({ step, onNext, onSkip }) {
 
         <div style={{ display: 'flex', gap: 8, marginTop: 16, justifyContent: 'flex-end' }}>
           <button className="btn btn-secondary" onClick={onSkip} style={{ fontSize: 12 }}>
-            Skip Tutorial
+            ข้ามบทเรียน
           </button>
           <button
             className="btn btn-primary"
             onClick={onNext}
             style={{ fontSize: 12, padding: '7px 20px' }}
           >
-            {isLast ? '✓ Got it!' : 'Next →'}
+            {isLast ? '✓ รับทราบ!' : 'ถัดไป →'}
           </button>
         </div>
       </div>

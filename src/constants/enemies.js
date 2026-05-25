@@ -11,7 +11,7 @@ export const ENEMY_DATA = {
     baseHp: 250,
     baseSpeed: 1.0,
     reward: 10,
-    damage: 25,
+    damage: 5,
     def: 0,
     res: 0.0,
     isBoss: false,
@@ -47,7 +47,7 @@ export const ENEMY_DATA = {
     baseHp: 600,
     baseSpeed: 0.7,
     reward: 25,
-    damage: 50,
+    damage: 20,
     def: 75,            // High flat defense - Sniper's nightmare!
     res: 0.1,           // Low resistance - Caster's playground!
     isBoss: false,
@@ -81,7 +81,7 @@ export const ENEMY_DATA = {
     glowColor: 'rgba(39,174,96,0.5)',
     shape: 'diamond',
     baseHp: 30,
-    baseSpeed: 1.5,
+    baseSpeed: 1.1,
     reward: 5,
     damage: 20,
     def: 2,
@@ -141,7 +141,7 @@ export function getEnemyStats(type, wave, difficultyMod = 1.0) {
     ...base,
     hp: Math.round(base.baseHp * waveScale * difficultyMod),
     maxHp: Math.round(base.baseHp * waveScale * difficultyMod),
-    speed: base.baseSpeed * Math.min(1 + (wave - 1) * 0.02, 1.5),
+    speed: base.baseSpeed * (type === 'swarm' ? Math.min(1 + (wave - 1) * 0.005, 1.1) : Math.min(1 + (wave - 1) * 0.02, 1.5)),
     def: Math.round((base.def || 0) * (1 + (wave - 1) * 0.05)),
   };
 }

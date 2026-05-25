@@ -43,10 +43,10 @@ export const UNIT_DATA = {
       t3: {
         id: 'piercing_shot',
         label: 'Piercing Shot',
-        description: 'ทุกนัดที่ 4 ยิงทะลวงเกราะ สร้าง Crit ×2 และสโลว์ 20% นาน 2 วินาที',
-        triggerEvery: 4,
-        slowPercent: 0.20,
-        slowDuration: 2.0,
+        description: 'ทุกนัดที่ 5 ยิงทะลวงเกราะ สร้าง Crit ×2 และสโลว์ 10% นาน 1 วินาที',
+        triggerEvery: 5,
+        slowPercent: 0.10,
+        slowDuration: 1.0,
         critMultiplier: 2.0,
       },
     },
@@ -149,10 +149,10 @@ export const UNIT_DATA = {
       t3: {
         id: 'shockwave',
         label: 'Shockwave',
-        description: 'ปล่อยคลื่นกระแทก AOE สตัน 1 วินาที + สโลว์ 50% นาน 1.5 วินาที (CD 8 วิ)',
+        description: 'ปล่อยคลื่นกระแทก AOE สตัน 1 วินาที + สโลว์ 50% นาน 1 วินาที (CD 8 วิ)',
         stunDuration: 1.0,
         slowPercent: 0.50,
-        slowDuration: 1.5,
+        slowDuration: 1,
         cooldown: 8.0,
       },
     },
@@ -237,20 +237,20 @@ export function getUnitStats(type, tier) {
   const range = base.baseRange + UPGRADE_RANGE_BONUS * tier;
   const isElevated = base.placementType === 'elevated';
   return {
-    dmg:          Math.round(base.baseDmg * mult),
-    hp:           Math.round(base.baseHp * mult),
-    maxHp:        Math.round(base.baseHp * mult),
+    dmg: Math.round(base.baseDmg * mult),
+    hp: Math.round(base.baseHp * mult),
+    maxHp: Math.round(base.baseHp * mult),
     range,                                        // Chebyshev cells
-    cost:         base.baseCost,
-    upgradeCost:  tier < 2 ? base.baseCost * (tier === 0 ? 2 : 4) : null,
-    blockCount:   isElevated ? 0 : base.blockByTier[tier],
-    slowPercent:  base.slowByTier[tier],
-    isAoe:        base.aoeByTier[tier],
-    healAmount:   base.healAmount ? Math.round(base.healAmount * mult) : null,
-    hasSkill:     tier === 2,
-    skill:        tier === 2 ? base.skills?.t3 : null,
+    cost: base.baseCost,
+    upgradeCost: tier < 2 ? base.baseCost * (tier === 0 ? 2 : 4) : null,
+    blockCount: isElevated ? 0 : base.blockByTier[tier],
+    slowPercent: base.slowByTier[tier],
+    isAoe: base.aoeByTier[tier],
+    healAmount: base.healAmount ? Math.round(base.healAmount * mult) : null,
+    hasSkill: tier === 2,
+    skill: tier === 2 ? base.skills?.t3 : null,
     placementType: base.placementType,
-    antiAir:      base.antiAir,
+    antiAir: base.antiAir,
   };
 }
 
@@ -264,17 +264,17 @@ export function chebyshevDist(colA, rowA, colB, rowB) {
 export function enemyInRange(enemyPxX, enemyPxY, unitCol, unitRow, rangeCells, facing) {
   const enemyCol = Math.floor(enemyPxX / CELL_SIZE);
   const enemyRow = Math.floor(enemyPxY / CELL_SIZE);
-  
+
   if (chebyshevDist(unitCol, unitRow, enemyCol, enemyRow) > rangeCells) return false;
-  
+
   if (!facing) return true;
-  
+
   // Half-box restriction based on facing direction
   if (facing === 'up' && enemyRow > unitRow) return false;
   if (facing === 'down' && enemyRow < unitRow) return false;
   if (facing === 'left' && enemyCol > unitCol) return false;
   if (facing === 'right' && enemyCol < unitCol) return false;
-  
+
   return true;
 }
 

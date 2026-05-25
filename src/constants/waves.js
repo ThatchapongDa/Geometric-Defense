@@ -208,51 +208,51 @@ export const WAVE_TABLE = [
   [{ type: 'fast',    count: 5, interval: 0.8, lane: null },
    { type: 'armored', count: 2, interval: 3.0, lane: null }],
   // Wave 5 — swarm + drones
-  [{ type: 'swarm', count: 12, interval: 0.5, lane: null },
-   { type: 'drone', count: 3,  interval: 1.5, lane: -1, delay: 5 }],
+  [{ type: 'swarm', count: 8,  interval: 0.8, lane: null },
+   { type: 'drone', count: 2,  interval: 2.0, lane: -1, delay: 5 }],
   // Wave 6
-  [{ type: 'basic',   count: 8, interval: 0.8, lane: null },
-   { type: 'fast',    count: 4, interval: 1.0, lane: null },
-   { type: 'drone',   count: 2, interval: 2.0, lane: -1, delay: 6 }],
+  [{ type: 'basic',   count: 6,  interval: 1.0, lane: null },
+   { type: 'fast',    count: 3,  interval: 1.2, lane: null },
+   { type: 'drone',   count: 2,  interval: 2.0, lane: -1, delay: 6 }],
   // Wave 7
-  [{ type: 'armored', count: 5, interval: 2.5, lane: null },
-   { type: 'swarm',   count: 12, interval: 0.4, lane: null, delay: 8 },
-   { type: 'drone',   count: 3,  interval: 1.5, lane: -1, delay: 4 }],
+  [{ type: 'armored', count: 3,  interval: 2.5, lane: null },
+   { type: 'swarm',   count: 8,  interval: 0.7, lane: null, delay: 8 },
+   { type: 'drone',   count: 2,  interval: 2.0, lane: -1, delay: 4 }],
   // Wave 8
-  [{ type: 'fast',    count: 8, interval: 0.6, lane: null },
-   { type: 'armored', count: 3, interval: 2.0, lane: null },
-   { type: 'drone',   count: 4, interval: 1.2, lane: -1 }],
+  [{ type: 'fast',    count: 5,  interval: 0.8, lane: null },
+   { type: 'armored', count: 2,  interval: 2.5, lane: null },
+   { type: 'drone',   count: 3,  interval: 1.5, lane: -1 }],
   // Wave 9
-  [{ type: 'basic',   count: 10, interval: 0.7, lane: null },
-   { type: 'armored', count: 4,  interval: 2.0, lane: null },
-   { type: 'drone',   count: 4,  interval: 1.0, lane: -1, delay: 5 }],
+  [{ type: 'basic',   count: 8,  interval: 0.9, lane: null },
+   { type: 'armored', count: 3,  interval: 2.0, lane: null },
+   { type: 'drone',   count: 2,  interval: 1.5, lane: -1, delay: 5 }],
   // Wave 10 — BOSS
-  [{ type: 'basic', count: 8, interval: 0.8, lane: null },
-   { type: 'drone', count: 4, interval: 1.0, lane: -1, delay: 3 },
+  [{ type: 'basic', count: 6, interval: 1.0, lane: null },
+   { type: 'drone', count: 3, interval: 1.5, lane: -1, delay: 3 },
    { type: 'boss',  count: 1, interval: 0,   lane: null, delay: 12 }],
   // Wave 11
-  [{ type: 'fast',    count: 10, interval: 0.5, lane: null },
-   { type: 'armored', count: 5,  interval: 2.0, lane: null },
-   { type: 'drone',   count: 5,  interval: 1.0, lane: -1 }],
+  [{ type: 'fast',    count: 6,  interval: 0.7, lane: null },
+   { type: 'armored', count: 3,  interval: 2.0, lane: null },
+   { type: 'drone',   count: 3,  interval: 1.5, lane: -1 }],
   // Wave 12
-  [{ type: 'swarm',   count: 24, interval: 0.3, lane: null },
-   { type: 'armored', count: 4,  interval: 1.5, lane: null, delay: 8 },
-   { type: 'drone',   count: 6,  interval: 0.8, lane: -1, delay: 5 }],
+  [{ type: 'swarm',   count: 12, interval: 0.6, lane: null },
+   { type: 'armored', count: 3,  interval: 2.0, lane: null, delay: 8 },
+   { type: 'drone',   count: 3,  interval: 1.2, lane: -1, delay: 5 }],
   // Wave 13
-  [{ type: 'basic',   count: 12, interval: 0.6, lane: null },
-   { type: 'fast',    count: 8,  interval: 0.5, lane: null },
-   { type: 'drone',   count: 6,  interval: 0.8, lane: -1 },
-   { type: 'armored', count: 4,  interval: 2.0, lane: null, delay: 6 }],
+  [{ type: 'basic',   count: 8,  interval: 0.8, lane: null },
+   { type: 'fast',    count: 5,  interval: 0.7, lane: null },
+   { type: 'drone',   count: 3,  interval: 1.2, lane: -1 },
+   { type: 'armored', count: 2,  interval: 2.5, lane: null, delay: 6 }],
   // Wave 14
-  [{ type: 'swarm',   count: 18, interval: 0.3, lane: null },
-   { type: 'drone',   count: 6,  interval: 0.8, lane: -1 },
+  [{ type: 'swarm',   count: 10, interval: 0.6, lane: null },
+   { type: 'drone',   count: 3,  interval: 1.2, lane: -1 },
    { type: 'boss',    count: 1,  interval: 0,   lane: null, delay: 15 },
-   { type: 'fast',    count: 6,  interval: 0.7, lane: null, delay: 8 }],
+   { type: 'fast',    count: 4,  interval: 0.9, lane: null, delay: 8 }],
   // Wave 15 — mega boss
   [{ type: 'boss',    count: 2,  interval: 15,  lane: null },
-   { type: 'drone',   count: 8,  interval: 0.6, lane: -1, delay: 3 },
-   { type: 'armored', count: 6,  interval: 2.0, lane: null, delay: 5 },
-   { type: 'swarm',   count: 18, interval: 0.3, lane: null, delay: 10 }],
+   { type: 'drone',   count: 4,  interval: 1.2, lane: -1, delay: 3 },
+   { type: 'armored', count: 3,  interval: 2.5, lane: null, delay: 5 },
+   { type: 'swarm',   count: 10, interval: 0.6, lane: null, delay: 10 }],
 ];
 
 // Generate wave based on index and mapId
@@ -260,23 +260,23 @@ export function generateWave(waveIndex, mapId = 'tri-path') {
   if (mapId === 'stage4') {
     const STAGE4_WAVE_TABLE = [
       // Wave 1
-      [{ type: 'basic', count: 6, interval: 1.5, lane: null },
-       { type: 'ranged', count: 2, interval: 2.5, lane: null, delay: 5 }],
+      [{ type: 'basic', count: 4, interval: 1.5, lane: null },
+       { type: 'ranged', count: 1, interval: 3.0, lane: null, delay: 5 }],
       // Wave 2
-      [{ type: 'basic', count: 8, interval: 1.2, lane: null },
-       { type: 'fast',  count: 4, interval: 1.0, lane: null, delay: 3 },
-       { type: 'ranged', count: 3, interval: 2.0, lane: null, delay: 6 }],
+      [{ type: 'basic', count: 6, interval: 1.2, lane: null },
+       { type: 'fast',  count: 3, interval: 1.5, lane: null, delay: 3 },
+       { type: 'ranged', count: 2, interval: 2.5, lane: null, delay: 6 }],
       // Wave 3
-      [{ type: 'basic',   count: 10, interval: 1.0, lane: null },
-       { type: 'drone',   count: 4,  interval: 1.5, lane: -1, delay: 4 },
-       { type: 'armored', count: 3,  interval: 2.5, lane: null, delay: 6 },
-       { type: 'ranged',  count: 4,  interval: 2.0, lane: null, delay: 8 }],
-      // Wave 4 — Handcrafted Intense Boss Wave!
-      [{ type: 'basic',   count: 8,  interval: 0.8, lane: null },
-       { type: 'fast',    count: 6,  interval: 0.6, lane: null },
-       { type: 'armored', count: 4,  interval: 2.0, lane: null },
-       { type: 'drone',   count: 6,  interval: 1.0, lane: -1, delay: 3 },
-       { type: 'ranged',  count: 5,  interval: 1.5, lane: null, delay: 5 },
+      [{ type: 'basic',   count: 8,  interval: 1.0, lane: null },
+       { type: 'drone',   count: 2,  interval: 2.0, lane: -1, delay: 4 },
+       { type: 'armored', count: 2,  interval: 3.0, lane: null, delay: 6 },
+       { type: 'ranged',  count: 2,  interval: 2.0, lane: null, delay: 8 }],
+      // Wave 4 — Handcrafted Balanced Boss Wave!
+      [{ type: 'basic',   count: 6,  interval: 1.0, lane: null },
+       { type: 'fast',    count: 4,  interval: 1.0, lane: null },
+       { type: 'armored', count: 3,  interval: 2.5, lane: null },
+       { type: 'drone',   count: 3,  interval: 1.5, lane: -1, delay: 3 },
+       { type: 'ranged',  count: 3,  interval: 2.0, lane: null, delay: 5 },
        { type: 'boss',    count: 1,  interval: 0,   lane: null, delay: 15 }]
     ];
     if (waveIndex < STAGE4_WAVE_TABLE.length) return STAGE4_WAVE_TABLE[waveIndex];
@@ -285,16 +285,41 @@ export function generateWave(waveIndex, mapId = 'tri-path') {
 
   if (waveIndex < WAVE_TABLE.length) return WAVE_TABLE[waveIndex];
   
-  // Infinite scaling waves for regular maps
+  // Infinite scaling waves for regular maps - balanced to prevent overcrowding and lag
   const w = waveIndex + 1;
   const groups = [];
-  groups.push({ type: 'basic', count: 6 + w, interval: Math.max(0.3, 1.0 - w * 0.03), lane: null });
-  if (w % 3 === 0) groups.push({ type: 'armored', count: Math.floor(w / 2), interval: 2.0, lane: null, delay: 6 });
-  if (w % 5 === 0) groups.push({ type: 'boss', count: 1, interval: 0, lane: null, delay: 18 });
-  if (w % 4 === 0) groups.push({ type: 'swarm', count: 12 + w, interval: 0.3, lane: null, delay: 4 });
-  if (w % 2 === 0) groups.push({ type: 'fast', count: 4 + Math.floor(w / 2), interval: 0.5, lane: null, delay: 3 });
-  if (w >= 3) groups.push({ type: 'drone', count: 2 + Math.floor(w / 3), interval: 1.0, lane: -1, delay: 2 });
-  if (w >= 4) groups.push({ type: 'ranged', count: 1 + Math.floor(w / 4), interval: 1.5, lane: null, delay: 5 });
+  
+  // Basic group scaling with a cap of 12 basic enemies
+  const basicCount = Math.min(12, 5 + Math.floor(w * 0.4));
+  groups.push({ type: 'basic', count: basicCount, interval: Math.max(0.8, 1.2 - w * 0.02), lane: null });
+  
+  // Modulo-based specialized enemy spawning (limits counts and limits visual noise)
+  if (w % 5 === 0) {
+    // Boss wave - bosses are slow but tough, spawn 1 boss
+    groups.push({ type: 'boss', count: 1, interval: 0, lane: null, delay: 12 });
+    if (w >= 10) {
+      groups.push({ type: 'drone', count: Math.min(3, Math.floor(w / 4)), interval: 1.5, lane: -1, delay: 2 });
+    }
+  } else if (w % 3 === 0) {
+    // Armored + Ranged wave
+    groups.push({ type: 'armored', count: Math.min(3, Math.floor(w / 3)), interval: 2.0, lane: null, delay: 4 });
+    if (w >= 6) {
+      groups.push({ type: 'ranged', count: Math.min(2, Math.floor(w / 6)), interval: 2.0, lane: null, delay: 6 });
+    }
+  } else if (w % 4 === 0) {
+    // Swarm wave - swarms have low HP, cap them at 12
+    const swarmCount = Math.min(12, 6 + Math.floor(w * 0.5));
+    groups.push({ type: 'swarm', count: swarmCount, interval: 0.6, lane: null, delay: 3 });
+    if (w >= 8) {
+      groups.push({ type: 'drone', count: Math.min(3, Math.floor(w / 4)), interval: 1.5, lane: -1, delay: 5 });
+    }
+  } else {
+    // Fast runner wave
+    groups.push({ type: 'fast', count: Math.min(5, 2 + Math.floor(w / 2)), interval: 1.0, lane: null, delay: 3 });
+    if (w >= 5 && w % 2 === 0) {
+      groups.push({ type: 'drone', count: Math.min(2, Math.floor(w / 5)), interval: 1.5, lane: -1, delay: 4 });
+    }
+  }
   
   return groups;
 }

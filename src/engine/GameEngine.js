@@ -6,6 +6,7 @@
 import { MAPS, MAP_PATH_CELLS, generateWave, getLaneForEnemy } from '../constants/waves';
 import { UNIT_DATA, SLOW_FLOOR, getUnitStats, chebyshevDist, enemyInRange, getAdjacencyBonus, CELL_SIZE, GRID_COLS, GRID_ROWS } from '../constants/units';
 import { ENEMY_DATA } from '../constants/enemies';
+import { getUnitSprite, getEnemySprite, preloadAllSprites } from '../constants/sprites';
 import soundManager from './SoundManager';
 import particles from './ParticleSystem';
 
@@ -1092,28 +1093,36 @@ export class GameEngine {
       ctx.shadowColor = isSelected ? data.color : data.glowColor;
       ctx.shadowBlur = isSelected ? 24 : (hasCombo ? 16 : 8);
 
-      ctx.fillStyle = data.color;
-      this._drawShape(ctx, data.shape, px, py, size, unit.tier);
-      ctx.fill();
-
-      // Facing Chevron
-      if (unit.facing) {
-        ctx.save();
-        ctx.translate(px, py);
-        if (unit.facing === 'up') ctx.rotate(-Math.PI/2);
-        else if (unit.facing === 'down') ctx.rotate(Math.PI/2);
-        else if (unit.facing === 'left') ctx.rotate(Math.PI);
-        
-        ctx.beginPath();
-        const chSize = size * 0.4;
-        ctx.moveTo(chSize * 0.5, 0);
-        ctx.lineTo(-chSize * 0.5, -chSize * 0.5);
-        ctx.lineTo(-chSize * 0.2, 0);
-        ctx.lineTo(-chSize * 0.5, chSize * 0.5);
-        ctx.closePath();
-        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      // Try to draw sprite image; fallback to geometric shape
+      const spriteImg = getUnitSprite(unit.type, unit.facing || 'right');
+      if (spriteImg && spriteImg.complete && spriteImg.naturalWidth > 0) {
+        const drawSize = CELL_SIZE * 0.85;
+        ctx.drawImage(spriteImg, px - drawSize / 2, py - drawSize / 2, drawSize, drawSize);
+      } else {
+        // Fallback: draw geometric shape
+        ctx.fillStyle = data.color;
+        this._drawShape(ctx, data.shape, px, py, size, unit.tier);
         ctx.fill();
-        ctx.restore();
+
+        // Facing Chevron
+        if (unit.facing) {
+          ctx.save();
+          ctx.translate(px, py);
+          if (unit.facing === 'up') ctx.rotate(-Math.PI/2);
+          else if (unit.facing === 'down') ctx.rotate(Math.PI/2);
+          else if (unit.facing === 'left') ctx.rotate(Math.PI);
+          
+          ctx.beginPath();
+          const chSize = size * 0.4;
+          ctx.moveTo(chSize * 0.5, 0);
+          ctx.lineTo(-chSize * 0.5, -chSize * 0.5);
+          ctx.lineTo(-chSize * 0.2, 0);
+          ctx.lineTo(-chSize * 0.5, chSize * 0.5);
+          ctx.closePath();
+          ctx.fillStyle = 'rgba(255,255,255,0.8)';
+          ctx.fill();
+          ctx.restore();
+        }
       }
 
       // Combo pulse ring

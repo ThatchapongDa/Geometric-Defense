@@ -1,5 +1,6 @@
 import React from 'react';
 import { ENEMY_DATA } from '../constants/enemies';
+import { ENEMY_SPRITES, getSpriteImage } from '../constants/sprites';
 
 export default function EnemyEncyclopediaModal({ onClose }) {
   return (
@@ -79,9 +80,14 @@ export default function EnemyEncyclopediaModal({ onClose }) {
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   color: data.color,
                   fontSize: '20px',
-                  boxShadow: `0 0 10px ${data.color}44`
+                  boxShadow: `0 0 10px ${data.color}44`,
+                  overflow: 'hidden',
                 }}>
-                  {data.shape}
+                  {ENEMY_SPRITES[type] && getSpriteImage(ENEMY_SPRITES[type].icon) ? (
+                    <img src={ENEMY_SPRITES[type].icon} alt={type} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  ) : (
+                    data.shape
+                  )}
                 </div>
                 <div>
                   <div style={{ fontSize: '16px', fontWeight: 700, color: data.color, textTransform: 'capitalize' }}>

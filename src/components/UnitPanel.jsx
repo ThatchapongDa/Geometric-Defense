@@ -3,6 +3,7 @@
 
 import React, { useState, useRef } from 'react';
 import { UNIT_DATA, getUnitStats } from '../constants/units';
+import { UNIT_SPRITES, getSpriteImage } from '../constants/sprites';
 import UnitInfoModal from './UnitInfoModal';
 
 const UNIT_ICONS = {
@@ -158,12 +159,20 @@ function UnitCard({ type, data, stats, icon, isSelected, canAfford, onClick, onL
     >
       {/* Header row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{
-          fontSize: '20px',
-          color: data.color,
-          textShadow: isSelected ? `0 0 12px ${data.color}` : 'none',
-          lineHeight: 1,
-        }}>{icon}</span>
+        {UNIT_SPRITES[type] && getSpriteImage(UNIT_SPRITES[type].icon) ? (
+          <img 
+            src={UNIT_SPRITES[type].icon} 
+            alt={data.name}
+            style={{ width: 28, height: 28, objectFit: 'contain', filter: isSelected ? `drop-shadow(0 0 6px ${data.color})` : 'none' }}
+          />
+        ) : (
+          <span style={{
+            fontSize: '20px',
+            color: data.color,
+            textShadow: isSelected ? `0 0 12px ${data.color}` : 'none',
+            lineHeight: 1,
+          }}>{icon}</span>
+        )}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
           <div style={{ fontSize: '12px', fontWeight: 700, color: isSelected ? data.color : 'var(--text-primary)', lineHeight: 1.2 }}>
             {data.name}

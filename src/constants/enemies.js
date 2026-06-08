@@ -65,7 +65,7 @@ export const ENEMY_DATA = {
     baseHp: 1200,
     baseSpeed: 0.5,
     reward: 100,
-    damage: 100,
+    damage: 70,
     def: 100,
     res: 0.3,
     isBoss: true,

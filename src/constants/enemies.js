@@ -47,7 +47,7 @@ export const ENEMY_DATA = {
     baseHp: 600,
     baseSpeed: 0.7,
     reward: 25,
-    damage: 20,
+    damage: 5,
     def: 75,            // High flat defense - Sniper's nightmare!
     res: 0.1,           // Low resistance - Caster's playground!
     isBoss: false,
